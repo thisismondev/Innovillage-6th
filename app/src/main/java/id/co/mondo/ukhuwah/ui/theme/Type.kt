@@ -34,4 +34,22 @@ val Typography = Typography(
         fontSize = 14.sp,
         lineHeight = 14.sp
     ),
+    bodyLarge = TextStyle(
+        fontFamily = poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp,
+        lineHeight = 14.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = poppins,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 14.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = poppins,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 14.sp
+    ),
 )
