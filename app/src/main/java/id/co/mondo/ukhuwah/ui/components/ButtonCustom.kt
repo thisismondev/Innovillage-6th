@@ -17,12 +17,12 @@ import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
 fun ButtonCustom(
-    label: String, modifier: Modifier, onCLick: () -> Unit
+    label: String, modifier: Modifier, onClick: () -> Unit
 ) {
 
     Button(
         onClick = {
-            onCLick
+            onClick()
         },
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
@@ -47,7 +47,7 @@ fun PreviewButtonCompose() {
     Innovillage6thTheme {
         Column(Modifier.fillMaxSize()) {
             ButtonCustom(
-                label = "Selanjutnya", modifier = Modifier, onCLick = {})
+                label = "Selanjutnya", modifier = Modifier, onClick = {})
         }
     }
 }

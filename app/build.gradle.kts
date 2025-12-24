@@ -60,4 +60,7 @@ dependencies {
 
 //    Splashscreen API
     implementation("androidx.core:core-splashscreen:1.2.0")
+
+//    Navigation
+    implementation("androidx.navigation:navigation-compose:2.9.6")
 }
