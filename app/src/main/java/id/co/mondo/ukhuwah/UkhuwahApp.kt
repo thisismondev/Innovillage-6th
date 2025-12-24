@@ -11,8 +11,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.ui.components.BottomBar
+import id.co.mondo.ukhuwah.ui.screen.AddScreen
+import id.co.mondo.ukhuwah.ui.screen.DetailScreen
+import id.co.mondo.ukhuwah.ui.screen.HistoryScreen
 import id.co.mondo.ukhuwah.ui.screen.HomeScreen
 import id.co.mondo.ukhuwah.ui.screen.LoginScreen
+import id.co.mondo.ukhuwah.ui.screen.ParentScreen
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @Composable
@@ -51,6 +55,18 @@ fun UkhuwahApp(startDestination: String) {
             }
             composable("home") {
                 HomeScreen(navController)
+            }
+            composable ("detail") {
+                DetailScreen()
+            }
+            composable ("history") {
+                HistoryScreen()
+            }
+            composable ("parent") {
+                ParentScreen()
+            }
+            composable("add"){
+                AddScreen()
             }
         }
     }

@@ -1,5 +1,6 @@
 package id.co.mondo.ukhuwah.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,13 +18,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.ui.components.ButtonCustom
 import id.co.mondo.ukhuwah.ui.components.TextFieldCustom
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel){
+fun LoginScreen(navController: NavController, viewModel: AuthViewModel){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,8 +87,12 @@ fun LoginScreen(viewModel: AuthViewModel){
         ButtonCustom(
             modifier = Modifier.fillMaxWidth(),
             label = "Login",
-            onCLick = {
-
+            onClick = {
+                Log.d("LOGIN", "Button clicked")
+                navController.navigate("home") {
+                    popUpTo("login") { inclusive = true }
+                    launchSingleTop = true
+                }
             }
         )
     }
@@ -97,6 +105,6 @@ fun LoginScreen(viewModel: AuthViewModel){
 @Composable
 fun PreviewLoginScreen(){
     Innovillage6thTheme {
-        LoginScreen(viewModel = AuthViewModel())
+        LoginScreen(navController = rememberNavController(),viewModel = viewModel())
     }
 }

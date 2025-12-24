@@ -6,9 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import id.co.mondo.ukhuwah.ui.screen.LoginScreen
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
-import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 import id.co.mondo.ukhuwah.ui.viewmodel.SplashScreenViewModel
 
 class MainActivity : ComponentActivity() {
@@ -26,7 +24,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Innovillage6thTheme {
-                LoginScreen(viewModel = AuthViewModel())
+                UkhuwahApp("Login")
             }
         }
     }
