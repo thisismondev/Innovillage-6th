@@ -73,7 +73,7 @@ fun BottomBar(
                             selected = currentRoute == item.route,
                             onClick = {
                                 navController.navigate(item.route) {
-                                    popUpTo(BottomNavItem.HOME.route) {
+                                    popUpTo(navController.graph.startDestinationId) {
                                         saveState = true
                                     }
                                     launchSingleTop = true
@@ -88,9 +88,9 @@ fun BottomBar(
                                 )
                             },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color.White,               // icon jadi PUTIH
-                                unselectedIconColor = MaterialTheme.colorScheme.primary,       // icon pink
-                                indicatorColor = MaterialTheme.colorScheme.primary              // background pink (pill)
+                                selectedIconColor = Color.White,
+                                unselectedIconColor = MaterialTheme.colorScheme.primary,
+                                indicatorColor = MaterialTheme.colorScheme.primary
                             )
 
 
