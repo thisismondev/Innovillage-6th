@@ -1,10 +1,8 @@
 package id.co.mondo.ukhuwah
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,28 +42,28 @@ fun UkhuwahApp(startDestination: String) {
                 BottomBar(navController)
             }
         }
-    ) { padding ->
+    ) { _ ->
         NavHost(
             navController = navController,
             startDestination = startDestination,
-            modifier = Modifier.padding(padding),
-        ) {
+
+            ) {
             composable("login") {
                 LoginScreen(navController, authViewModel)
             }
             composable("home") {
                 HomeScreen(navController)
             }
-            composable ("detail") {
+            composable("detail") {
                 DetailScreen()
             }
-            composable ("history") {
+            composable("history") {
                 HistoryScreen()
             }
-            composable ("parent") {
+            composable("parent") {
                 ParentScreen()
             }
-            composable("add"){
+            composable("add") {
                 AddScreen()
             }
         }

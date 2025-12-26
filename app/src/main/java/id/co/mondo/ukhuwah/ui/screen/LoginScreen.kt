@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +33,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .systemBarsPadding()
+            .windowInsetsPadding(WindowInsets.statusBars)
+//                systemBarsPadding() untuk status bar dan bottombar, yang di atas khusus status abr saja cocok untuk yang tidak menggunakan btom bar
             .padding(20.dp)
     ) {
         Text(
