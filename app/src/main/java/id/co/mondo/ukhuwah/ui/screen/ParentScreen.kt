@@ -103,7 +103,7 @@ fun ParentScreen(
             items(10) {
                 ParentCard(
                     onClick = {
-
+                        navController.navigate("profile-parent")
                     }
                 )
 

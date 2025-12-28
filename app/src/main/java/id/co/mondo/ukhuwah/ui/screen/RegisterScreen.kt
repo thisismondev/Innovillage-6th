@@ -26,6 +26,7 @@ import id.co.mondo.ukhuwah.ui.components.AppTopBar
 import id.co.mondo.ukhuwah.ui.components.ButtonCustom
 import id.co.mondo.ukhuwah.ui.components.GenderField
 import id.co.mondo.ukhuwah.ui.components.TextFieldCustom
+import id.co.mondo.ukhuwah.ui.components.TextFieldDateCustom
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
@@ -35,6 +36,7 @@ fun RegisterScreen(
 ) {
 
     var gender by remember { mutableStateOf("") }
+    var birthDate by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -90,6 +92,12 @@ fun RegisterScreen(
                         onGenderSelected = {
                             gender = it
                         }
+                    )
+                    TextFieldDateCustom(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = birthDate,
+                        label = "Tanggal Lahir",
+                        onDateSelected = { birthDate = it }
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),

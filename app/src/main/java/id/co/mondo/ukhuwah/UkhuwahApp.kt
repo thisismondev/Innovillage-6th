@@ -15,6 +15,8 @@ import id.co.mondo.ukhuwah.ui.screen.HistoryScreen
 import id.co.mondo.ukhuwah.ui.screen.HomeScreen
 import id.co.mondo.ukhuwah.ui.screen.LoginScreen
 import id.co.mondo.ukhuwah.ui.screen.ParentScreen
+import id.co.mondo.ukhuwah.ui.screen.ProfileChildrenScreen
+import id.co.mondo.ukhuwah.ui.screen.ProfileParentScreen
 import id.co.mondo.ukhuwah.ui.screen.RegisterScreen
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
@@ -75,6 +77,18 @@ fun UkhuwahApp(startDestination: String) {
             }
             composable("add") {
                 AddScreen()
+            }
+            composable("profile-parent") {
+                ProfileParentScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
+            }
+            composable("profile-children") {
+                ProfileChildrenScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
             }
         }
     }
