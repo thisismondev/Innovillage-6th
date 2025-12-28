@@ -42,7 +42,7 @@ fun FilterTabs(
     selectedTab: String,
     onTabSelected: (String) -> Unit,
 ) {
-    val tabs = listOf("Semua", "Bulan ini", "Bulan lalu", "Pilih rentang")
+    val tabs = listOf("Semua", "Bulan ini", "Pilih rentang")
     val dateRange = listOf(
         "Maret 2025",
         "Januari 2025",
