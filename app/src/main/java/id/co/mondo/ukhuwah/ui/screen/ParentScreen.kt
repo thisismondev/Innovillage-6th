@@ -1,7 +1,6 @@
 package id.co.mondo.ukhuwah.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,90 +28,88 @@ import androidx.compose.ui.tooling.preview.Devices.PIXEL_4
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.R
+import id.co.mondo.ukhuwah.ui.components.AppTopBar
 import id.co.mondo.ukhuwah.ui.components.ParentCard
 import id.co.mondo.ukhuwah.ui.components.SearchField
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
-fun ParentScreen() {
+fun ParentScreen(
+    navController: NavController,
+    contentPadding: PaddingValues
+) {
 
     var query by rememberSaveable { mutableStateOf("") }
 
-
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .systemBarsPadding()
-            .padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(contentPadding),
     ) {
+        AppTopBar(
+            title = "Orang Tua",
+            showBack = false,
 
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(55.dp),
-                contentAlignment = Alignment.Center
+        )
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            SearchField(
+                query = query,
+                onQueryChange = {
+                    query = it
+                },
+                modifier = Modifier.weight(1F)
+            )
+            Button(
+                onClick = {
+                    navController.navigate("register")
+
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier.height(48.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp),
             ) {
-                Text(
-                    text = "Orang Tua",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 16.sp
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        painter = painterResource(R.drawable.family),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(16.dp)
                     )
-                )
+                    Text(
+                        text = "Buat Akun",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 10.sp
+                        )
+                    )
+                }
+
             }
         }
-        item {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                SearchField(
-                    query = query,
-                    onQueryChange = {
-                        query = it
-                    },
-                    modifier = Modifier.weight(1F)
-                )
-                Button(
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(10) {
+                ParentCard(
                     onClick = {
 
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    modifier = Modifier.height(48.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp),
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            painter = painterResource(R.drawable.family),
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "Buat Akun",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                fontSize = 10.sp
-                            )
-                        )
                     }
-
-                }
-
+                )
 
             }
-        }
-        items(10) {
-            ParentCard(
-                onClick = {
-
-                }
-            )
 
         }
-
     }
 }
 
@@ -122,6 +118,9 @@ fun ParentScreen() {
 @Composable
 fun PreviewParentScreen() {
     Innovillage6thTheme {
-        ParentScreen()
+        ParentScreen(
+            navController = rememberNavController(),
+            contentPadding = PaddingValues()
+        )
     }
 }

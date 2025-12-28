@@ -15,6 +15,7 @@ import id.co.mondo.ukhuwah.ui.screen.HistoryScreen
 import id.co.mondo.ukhuwah.ui.screen.HomeScreen
 import id.co.mondo.ukhuwah.ui.screen.LoginScreen
 import id.co.mondo.ukhuwah.ui.screen.ParentScreen
+import id.co.mondo.ukhuwah.ui.screen.RegisterScreen
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @Composable
@@ -42,7 +43,7 @@ fun UkhuwahApp(startDestination: String) {
                 BottomBar(navController)
             }
         }
-    ) { _ ->
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = startDestination,
@@ -60,8 +61,17 @@ fun UkhuwahApp(startDestination: String) {
             composable("history") {
                 HistoryScreen()
             }
+            composable("register") {
+                RegisterScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
+            }
             composable("parent") {
-                ParentScreen()
+                ParentScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
             }
             composable("add") {
                 AddScreen()
