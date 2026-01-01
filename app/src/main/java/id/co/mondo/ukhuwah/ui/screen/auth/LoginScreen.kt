@@ -1,4 +1,4 @@
-package id.co.mondo.ukhuwah.ui.screen
+package id.co.mondo.ukhuwah.ui.screen.auth
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -68,7 +68,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel){
             TextFieldCustom(
                 modifier = Modifier.fillMaxWidth(),
                 values = viewModel.password,
-                label = "Password",
+                label = "Kata Sandi",
                 onValueChange = {
                     viewModel.password = it
                 },
@@ -78,7 +78,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel){
             TextFieldCustom(
                 modifier = Modifier.fillMaxWidth(),
                 values = viewModel.confirmPassword,
-                label = "Confirm Password",
+                label = "Konfirmasi Kata Sandi",
                 onValueChange = {
                     viewModel.confirmPassword = it
                 },
@@ -89,7 +89,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel){
         Spacer(Modifier.height(32.dp))
         ButtonCustom(
             modifier = Modifier.fillMaxWidth(),
-            label = "Login",
+            label = "Masuk",
             onClick = {
                 Log.d("LOGIN", "Button clicked")
                 navController.navigate("home") {

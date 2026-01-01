@@ -1,4 +1,4 @@
-package id.co.mondo.ukhuwah.ui.screen
+package id.co.mondo.ukhuwah.ui.screen.family
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

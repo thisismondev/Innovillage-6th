@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,7 +23,9 @@ fun AppTopBar(
     title: String,
     modifier: Modifier = Modifier,
     showBack: Boolean = true,
+    showSearch: Boolean = false,
     onBackClick: () -> Unit = {},
+    onSearchClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -51,6 +54,22 @@ fun AppTopBar(
             ),
             modifier = Modifier.align(Alignment.Center)
         )
+
+        if (showSearch){
+            IconButton(
+                onClick = {
+                    onSearchClick()
+                },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search"
+                )
+            }
+        }
+
+
     }
     Divider(
         modifier = Modifier.fillMaxWidth(),

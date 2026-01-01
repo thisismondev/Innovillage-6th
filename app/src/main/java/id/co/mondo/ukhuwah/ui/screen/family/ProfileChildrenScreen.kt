@@ -1,10 +1,13 @@
-package id.co.mondo.ukhuwah.ui.screen
+package id.co.mondo.ukhuwah.ui.screen.family
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,18 +24,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.ui.components.AppTopBar
-import id.co.mondo.ukhuwah.ui.components.ChildrenCard
+import id.co.mondo.ukhuwah.ui.components.ButtonCustom
 import id.co.mondo.ukhuwah.ui.components.GenderField
 import id.co.mondo.ukhuwah.ui.components.TextFieldCustom
 import id.co.mondo.ukhuwah.ui.components.TextFieldDateCustom
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
-fun ProfileParentScreen(
+fun ProfileChildrenScreen(
     navController: NavController,
     contentPadding: PaddingValues
 ) {
-
     var gender by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
 
@@ -42,7 +44,7 @@ fun ProfileParentScreen(
             .padding(contentPadding),
     ) {
         AppTopBar(
-            title = "Profile Keluarga",
+            title = "Profile Anak",
             showBack = true,
             onBackClick = {
                 navController.popBackStack()
@@ -54,15 +56,10 @@ fun ProfileParentScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "Informasi Orang Tua",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.Black
-            )
             TextFieldCustom(
                 modifier = Modifier.fillMaxWidth(),
                 values = "",
-                label = "Nama Orang Tua",
+                label = "Nama",
                 onValueChange = {
 
                 },
@@ -77,15 +74,6 @@ fun ProfileParentScreen(
                 },
                 keyboardType = KeyboardType.Number
             )
-            TextFieldCustom(
-                modifier = Modifier.fillMaxWidth(),
-                values = "",
-                label = "Email",
-                onValueChange = {
-
-                },
-                keyboardType = KeyboardType.Email
-            )
             GenderField(
                 selectedGender = gender,
                 onGenderSelected = {
@@ -98,42 +86,60 @@ fun ProfileParentScreen(
                 label = "Tanggal Lahir",
                 onDateSelected = { birthDate = it }
             )
-            TextFieldCustom(
-                modifier = Modifier.fillMaxWidth(),
-                values = "",
-                label = "No. Handphone",
-                onValueChange = {
-
-                },
-                keyboardType = KeyboardType.Number
-            )
-            TextFieldCustom(
-                modifier = Modifier.fillMaxWidth(),
-                values = "",
-                label = "Alamat",
-                onValueChange = {
-
-                },
-                keyboardType = KeyboardType.Text
-            )
             Text(
-                text = "Anak - Anak",
+                text = "Data kelahiran",
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.Black
             )
-            ChildrenCard(
-                name = "Arnawati",
-                onClick = {
-                    navController.navigate("profile-children")
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    TextFieldCustom(
+                        modifier = Modifier.weight(1f),
+                        values = "",
+                        label = "TB",
+                        onValueChange = {},
+                        keyboardType = KeyboardType.Decimal
+                    )
+                    TextFieldCustom(
+                        modifier = Modifier.weight(1f),
+                        values = "",
+                        label = "BB",
+                        onValueChange = {},
+                        keyboardType = KeyboardType.Decimal
+                    )
                 }
-            )
-            ChildrenCard(
-                name = "La ode",
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    TextFieldCustom(
+                        modifier = Modifier.weight(1f),
+                        values = "",
+                        label = "LK",
+                        onValueChange = {},
+                        keyboardType = KeyboardType.Decimal
+                    )
+                    TextFieldCustom(
+                        modifier = Modifier.weight(1f),
+                        values = "",
+                        label = "LiLA",
+                        onValueChange = {},
+                        keyboardType = KeyboardType.Decimal
+                    )
+                }
+            }
+            Spacer(Modifier.height(20.dp))
+            ButtonCustom(
+                modifier = Modifier.fillMaxWidth(),
+                label = "Simpan Perubahan",
                 onClick = {
 
                 }
             )
-
         }
     }
 }
@@ -141,9 +147,9 @@ fun ProfileParentScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewProfileFamilyScreen() {
+fun PreviewProfileChildrenScreen() {
     Innovillage6thTheme {
-        ProfileParentScreen(
+        ProfileChildrenScreen(
             navController = rememberNavController(),
             contentPadding = PaddingValues()
         )

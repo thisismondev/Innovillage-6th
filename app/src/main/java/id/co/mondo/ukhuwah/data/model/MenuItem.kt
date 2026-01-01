@@ -38,12 +38,12 @@ val menuItems = listOf(
         title = "Tambah Profile Anak",
         icon = R.drawable.children,
         color = tpanak,
-        routes = ""
+        routes = "add-children"
     ),MenuItem(
         title = "Buat Akun Orang Tua",
         icon = R.drawable.family,
         color = bakunparent,
-        routes = "addparent"
+        routes = "register"
     ),
     MenuItem(
         title = "Export Data Anak",
