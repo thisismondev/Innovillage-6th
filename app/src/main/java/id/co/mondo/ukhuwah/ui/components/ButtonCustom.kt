@@ -17,7 +17,7 @@ import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
 fun ButtonCustom(
-    label: String, modifier: Modifier, onClick: () -> Unit
+    label: String, modifier: Modifier, onClick: () -> Unit, enabled: Boolean = true
 ) {
 
     Button(
@@ -28,7 +28,8 @@ fun ButtonCustom(
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary
-        )
+        ),
+        enabled = enabled
     ) {
         Text(
             text = label,

@@ -39,6 +39,9 @@ fun ProfileParentScreen(
 
     var gender by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
+    var isEditMode by remember { mutableStateOf(false) }
+    var enabled by remember { mutableStateOf(false) }
+
 
     Column(
         modifier = Modifier
@@ -50,12 +53,23 @@ fun ProfileParentScreen(
             showBack = true,
             onBackClick = {
                 navController.popBackStack()
+            },
+            showEdit = true,
+            isEditMode = isEditMode,
+            onSaveClick = {
+                if (isEditMode) {
+                    enabled = false
+                    isEditMode = false
+                } else {
+                    enabled = true
+                    isEditMode = true
+                }
             }
         )
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 20.dp),
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             item {
@@ -75,7 +89,8 @@ fun ProfileParentScreen(
                         onValueChange = {
 
                         },
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Text,
+                        enabled = enabled
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
@@ -84,7 +99,8 @@ fun ProfileParentScreen(
                         onValueChange = {
 
                         },
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Number,
+                        enabled = enabled
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
@@ -93,19 +109,22 @@ fun ProfileParentScreen(
                         onValueChange = {
 
                         },
-                        keyboardType = KeyboardType.Email
+                        keyboardType = KeyboardType.Email,
+                        enabled = enabled
                     )
                     GenderField(
                         selectedGender = gender,
                         onGenderSelected = {
                             gender = it
-                        }
+                        },
+                        enabled = enabled
                     )
                     TextFieldDateCustom(
                         modifier = Modifier.fillMaxWidth(),
                         value = birthDate,
                         label = "Tanggal Lahir",
-                        onDateSelected = { birthDate = it }
+                        onDateSelected = { birthDate = it },
+                        enabled = enabled
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
@@ -114,7 +133,8 @@ fun ProfileParentScreen(
                         onValueChange = {
 
                         },
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Number,
+                        enabled = enabled
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
@@ -123,7 +143,8 @@ fun ProfileParentScreen(
                         onValueChange = {
 
                         },
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Text,
+                        enabled = enabled
                     )
                 }
             }

@@ -37,6 +37,10 @@ fun ProfileChildrenScreen(
 ) {
     var gender by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
+    var isEditMode by remember { mutableStateOf(false) }
+    var enabled by remember { mutableStateOf(false) }
+
+
 
     Column(
         modifier = Modifier
@@ -48,6 +52,17 @@ fun ProfileChildrenScreen(
             showBack = true,
             onBackClick = {
                 navController.popBackStack()
+            },
+            showEdit = true,
+            isEditMode = isEditMode,
+            onSaveClick = {
+                if (isEditMode) {
+                    enabled = false
+                    isEditMode = false
+                } else {
+                    enabled = true
+                    isEditMode = true
+                }
             }
         )
         Column(
@@ -78,7 +93,8 @@ fun ProfileChildrenScreen(
                 selectedGender = gender,
                 onGenderSelected = {
                     gender = it
-                }
+                },
+                enabled = enabled
             )
             TextFieldDateCustom(
                 modifier = Modifier.fillMaxWidth(),
@@ -138,7 +154,8 @@ fun ProfileChildrenScreen(
                 label = "Simpan Perubahan",
                 onClick = {
 
-                }
+                },
+                enabled = enabled
             )
         }
     }

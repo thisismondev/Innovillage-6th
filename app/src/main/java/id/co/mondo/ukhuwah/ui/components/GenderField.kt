@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GenderField(
     selectedGender: String?,
-    onGenderSelected: (String) -> Unit
+    onGenderSelected: (String) -> Unit,
+    enabled: Boolean = true
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -38,7 +39,8 @@ fun GenderField(
             ) {
                 RadioButton(
                     selected = selectedGender == "Laki-laki",
-                    onClick = { onGenderSelected("Laki-laki") }
+                    onClick = { onGenderSelected("Laki-laki") },
+                    enabled = enabled
                 )
                 Text(
                     text = "Laki-laki", style = MaterialTheme.typography.titleMedium,
@@ -50,7 +52,8 @@ fun GenderField(
             ) {
                 RadioButton(
                     selected = selectedGender == "Perempuan",
-                    onClick = { onGenderSelected("Perempuan") }
+                    onClick = { onGenderSelected("Perempuan") },
+                    enabled = enabled
                 )
                 Text(
                     text = "Perempuan", style = MaterialTheme.typography.titleMedium,

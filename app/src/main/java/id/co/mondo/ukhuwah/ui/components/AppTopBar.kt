@@ -1,5 +1,6 @@
 package id.co.mondo.ukhuwah.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -24,8 +26,12 @@ fun AppTopBar(
     modifier: Modifier = Modifier,
     showBack: Boolean = true,
     showSearch: Boolean = false,
+    showEdit: Boolean = false,
+    isEditMode: Boolean = false,
     onBackClick: () -> Unit = {},
-    onSearchClick: () -> Unit = {}
+    onSearchClick: () -> Unit = {},
+    onSaveClick: () -> Unit = {}
+
 ) {
     Box(
         modifier = modifier
@@ -67,6 +73,22 @@ fun AppTopBar(
                     contentDescription = "Search"
                 )
             }
+        }
+        if (showEdit){
+            Text(
+                text = if (isEditMode) "Save" else "Edit",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    textDecoration = TextDecoration.Underline
+                ),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .clickable(
+                    onClick = {
+                        onSaveClick()
+                    }
+                )
+            )
         }
 
 
