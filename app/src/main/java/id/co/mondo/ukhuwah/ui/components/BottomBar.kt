@@ -49,7 +49,7 @@ fun BottomBar(
                         NavigationBarItem(
                             selected = false,
                             onClick = {
-
+                                navController.navigate(item.route)
                             },
                             icon = {
                                 Box(

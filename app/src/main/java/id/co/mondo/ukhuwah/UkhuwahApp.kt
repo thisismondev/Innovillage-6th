@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.ui.components.BottomBar
-import id.co.mondo.ukhuwah.ui.screen.AddScreen
 import id.co.mondo.ukhuwah.ui.screen.DetailScreen
 import id.co.mondo.ukhuwah.ui.screen.HistoryScreen
 import id.co.mondo.ukhuwah.ui.screen.HomeScreen
@@ -19,6 +18,7 @@ import id.co.mondo.ukhuwah.ui.screen.family.AddChildrenScreen
 import id.co.mondo.ukhuwah.ui.screen.family.ParentScreen
 import id.co.mondo.ukhuwah.ui.screen.family.ProfileChildrenScreen
 import id.co.mondo.ukhuwah.ui.screen.family.ProfileParentScreen
+import id.co.mondo.ukhuwah.ui.screen.family.UpdateChildrenScreen
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @Composable
@@ -35,7 +35,7 @@ fun UkhuwahApp(startDestination: String) {
     val bottomBarRoutes = setOf(
         "home",
         "detail",
-        "add",
+        "update-children",
         "history",
         "parent"
     )
@@ -76,8 +76,11 @@ fun UkhuwahApp(startDestination: String) {
                     contentPadding = innerPadding
                 )
             }
-            composable("add") {
-                AddScreen()
+            composable("update-children") {
+                UpdateChildrenScreen(
+                    navController = navController,
+                    paddingvalues = innerPadding
+                )
             }
             composable("profile-parent") {
                 ProfileParentScreen(

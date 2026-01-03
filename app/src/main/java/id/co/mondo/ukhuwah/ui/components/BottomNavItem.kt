@@ -15,7 +15,7 @@ enum class BottomNavItem(
         icon = R.drawable.detail
     ),
     ADD(
-        route = "add",
+        route = "update-children",
         icon = R.drawable.add
     ),
     HISTORY(
