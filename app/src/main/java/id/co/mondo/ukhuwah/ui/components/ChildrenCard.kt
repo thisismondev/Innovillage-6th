@@ -32,6 +32,8 @@ import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 fun ChildrenCard(
     name: String,
     onClick: () -> Unit,
+    showIcon: Boolean = true,
+    select: Boolean = true
 ) {
     OutlinedCard(
         modifier = Modifier
@@ -43,7 +45,12 @@ fun ChildrenCard(
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.primary
+            color =
+                if (select){
+                    MaterialTheme.colorScheme.primary
+                }else{
+                    Color.LightGray
+                }
         )
     ) {
         Row(
@@ -100,12 +107,14 @@ fun ChildrenCard(
                     )
                 }
             }
-            Icon(
-                painter = painterResource(R.drawable.chevronright),
-                contentDescription = null,
-                tint = Color.Black,
-                modifier = Modifier.size(24.dp)
-            )
+            if (showIcon){
+                Icon(
+                    painter = painterResource(R.drawable.chevronright),
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }

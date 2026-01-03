@@ -1,5 +1,7 @@
 package id.co.mondo.ukhuwah
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +23,7 @@ import id.co.mondo.ukhuwah.ui.screen.family.ProfileParentScreen
 import id.co.mondo.ukhuwah.ui.screen.family.UpdateChildrenScreen
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun UkhuwahApp(startDestination: String) {
 
@@ -62,7 +65,10 @@ fun UkhuwahApp(startDestination: String) {
                 DetailScreen()
             }
             composable("history") {
-                HistoryScreen()
+                HistoryScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
             }
             composable("register") {
                 RegisterScreen(
