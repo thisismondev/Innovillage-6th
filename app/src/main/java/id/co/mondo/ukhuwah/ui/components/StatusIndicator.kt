@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun StatusIndicator(
-    painter: ImageVector,
+    painter: Painter,
     color: Color,
     tintIcon: Color
 ) {
@@ -28,7 +28,7 @@ fun StatusIndicator(
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            imageVector = painter,
+            painter = painter,
             contentDescription = "Done",
             modifier = Modifier.size(18.dp),
             tint = tintIcon

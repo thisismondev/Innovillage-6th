@@ -143,7 +143,8 @@ fun RegisterScreen(
                         onValueChange = {
 
                         },
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Password,
+                        isPasswordField = true
                     )
 
                 }

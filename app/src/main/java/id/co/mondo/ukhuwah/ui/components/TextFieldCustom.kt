@@ -2,6 +2,7 @@ package id.co.mondo.ukhuwah.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -34,7 +35,10 @@ fun TextFieldCustom(
     onValueChange: (String) -> Unit,
     isPasswordField: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    singleLine: Boolean = true,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    minLines: Int = 1
 ) {
 
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -59,7 +63,9 @@ fun TextFieldCustom(
         ),
 
         modifier = modifier,
-        singleLine = true,
+        singleLine = singleLine,
+        minLines = minLines,
+        maxLines = maxLines,
         textStyle = MaterialTheme.typography.titleMedium,
         trailingIcon = {
             if (isPasswordField) {
@@ -97,7 +103,7 @@ fun TextFieldCustomPreview() {
 
             var email by remember { mutableStateOf("") }
             var password by remember { mutableStateOf("") }
-
+            var address by remember { mutableStateOf("") }
 
 
             TextFieldCustom(
@@ -115,6 +121,16 @@ fun TextFieldCustomPreview() {
                 onValueChange = {password=it},
                 isPasswordField = true,
                 keyboardType = KeyboardType.Password
+            )
+            TextFieldCustom(
+                values = address,
+                label = "Alamat",
+                onValueChange = { address = it },
+                singleLine = false,
+                minLines = 3,
+                maxLines = 5,
+                keyboardType = KeyboardType.Text,
+                modifier = Modifier.fillMaxWidth()
             )
             
         }

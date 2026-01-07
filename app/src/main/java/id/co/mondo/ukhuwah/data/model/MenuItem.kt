@@ -30,10 +30,10 @@ val menuItems = listOf(
         color = jalper,
         routes = "detail"
     ),MenuItem(
-        title = "Infotmasi Kesehatan",
+        title = "Informasi Kesehatan",
         icon = R.drawable.openbook,
         color = inkes,
-        routes = "news"
+        routes = "health"
     ),MenuItem(
         title = "Tambah Profile Anak",
         icon = R.drawable.children,

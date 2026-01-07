@@ -79,7 +79,7 @@ fun HistoryScreen(
                         MonthYearUtils.monthNames.indexOf(month) + 1
                     )
                 },
-                modifier = Modifier.width(150.dp)
+                modifier = Modifier.weight(1f)
             )
             FilterDropdown(
                 selectedValue = selectedDate.year.toString(),
@@ -90,7 +90,7 @@ fun HistoryScreen(
                         newYear = year.toInt()
                     )
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.width(150.dp)
             )
         }
         Spacer(Modifier.height(12.dp))

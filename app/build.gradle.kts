@@ -31,8 +31,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(
+                org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+            )
+        }
     }
     buildFeatures {
         compose = true
@@ -57,10 +61,16 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+//    Icons Default
+    implementation("androidx.compose.material:material-icons-extended")
+
 
 //    Splashscreen API
     implementation("androidx.core:core-splashscreen:1.2.0")
 
 //    Navigation
     implementation("androidx.navigation:navigation-compose:2.9.6")
+
+//    Vico
+    implementation(libs.vico.compose.m3)
 }

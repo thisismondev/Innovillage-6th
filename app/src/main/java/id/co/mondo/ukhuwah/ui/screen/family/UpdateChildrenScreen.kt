@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -23,11 +20,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import id.co.mondo.ukhuwah.R
 import id.co.mondo.ukhuwah.ui.components.AppTopBar
 import id.co.mondo.ukhuwah.ui.components.ButtonCustom
 import id.co.mondo.ukhuwah.ui.components.ChildrenCard
@@ -44,7 +43,7 @@ fun UpdateChildrenScreen(
 ) {
 
     var birthDate by remember { mutableStateOf("") }
-    var metodeInput by remember { mutableStateOf("Manual") }
+    var metodeInput by remember { mutableStateOf("Otomatis") }
 
     Column(
         modifier = Modifier
@@ -52,7 +51,7 @@ fun UpdateChildrenScreen(
             .padding(paddingvalues)
     ) {
         AppTopBar(
-            title = "Tambah Anak",
+            title = "Update Pertumbuhan Anak",
             showBack = true,
             onBackClick = {
                 navController.popBackStack()
@@ -167,9 +166,6 @@ fun UpdateChildrenScreen(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             shape = RoundedCornerShape(20.dp),
-                            colors = CardDefaults.outlinedCardColors(
-                                containerColor = Color.White
-                            )
                         ) {
                             Column(
                                 modifier = Modifier.padding(20.dp),
@@ -188,7 +184,7 @@ fun UpdateChildrenScreen(
                                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                                 ) {
                                     StatusIndicator(
-                                        painter = Icons.Default.Check,
+                                        painter = painterResource(R.drawable.done),
                                         color = Color.Green,
                                         tintIcon = Color.White
                                     )

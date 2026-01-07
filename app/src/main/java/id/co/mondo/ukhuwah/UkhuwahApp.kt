@@ -11,16 +11,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.ui.components.BottomBar
-import id.co.mondo.ukhuwah.ui.screen.DetailScreen
 import id.co.mondo.ukhuwah.ui.screen.HistoryScreen
 import id.co.mondo.ukhuwah.ui.screen.HomeScreen
+import id.co.mondo.ukhuwah.ui.screen.NotificationScreen
 import id.co.mondo.ukhuwah.ui.screen.auth.LoginScreen
 import id.co.mondo.ukhuwah.ui.screen.auth.RegisterScreen
+import id.co.mondo.ukhuwah.ui.screen.detail.DetailScreen
 import id.co.mondo.ukhuwah.ui.screen.family.AddChildrenScreen
 import id.co.mondo.ukhuwah.ui.screen.family.ParentScreen
 import id.co.mondo.ukhuwah.ui.screen.family.ProfileChildrenScreen
 import id.co.mondo.ukhuwah.ui.screen.family.ProfileParentScreen
 import id.co.mondo.ukhuwah.ui.screen.family.UpdateChildrenScreen
+import id.co.mondo.ukhuwah.ui.screen.health.DetailMpasiScreen
+import id.co.mondo.ukhuwah.ui.screen.health.HealthScreen
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -62,7 +65,10 @@ fun UkhuwahApp(startDestination: String) {
                 HomeScreen(navController)
             }
             composable("detail") {
-                DetailScreen()
+                DetailScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
             }
             composable("history") {
                 HistoryScreen(
@@ -102,6 +108,24 @@ fun UkhuwahApp(startDestination: String) {
             }
             composable("add-children") {
                 AddChildrenScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
+            }
+            composable("health") {
+                HealthScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
+            }
+            composable("notification"){
+                NotificationScreen(
+                    navController = navController,
+                    contentPadding = innerPadding
+                )
+            }
+            composable("detail-mpasi") {
+                DetailMpasiScreen(
                     navController = navController,
                     contentPadding = innerPadding
                 )
