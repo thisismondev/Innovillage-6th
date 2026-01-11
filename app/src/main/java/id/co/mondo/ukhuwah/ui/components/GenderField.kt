@@ -38,12 +38,12 @@ fun GenderField(
                 modifier = Modifier.padding(end = 24.dp)
             ) {
                 RadioButton(
-                    selected = selectedGender == "Laki-laki",
-                    onClick = { onGenderSelected("Laki-laki") },
+                    selected = selectedGender == "Laki-Laki",
+                    onClick = { onGenderSelected("Laki-Laki") },
                     enabled = enabled
                 )
                 Text(
-                    text = "Laki-laki", style = MaterialTheme.typography.titleMedium,
+                    text = "Laki-Laki", style = MaterialTheme.typography.titleMedium,
                     color = Color.Gray
                 )
             }

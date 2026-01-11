@@ -1,9 +1,11 @@
 package id.co.mondo.ukhuwah
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,10 +38,13 @@ fun UkhuwahApp(startDestination: String, authViewModel: AuthViewModel) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    LaunchedEffect(currentRoute) {
+        Log.d("NAV_DEBUG", "Current route: $currentRoute")
+    }
+
     val bottomBarRoutes = setOf(
         "home",
         "detail",
-        "update-children",
         "history",
         "parent"
     )
@@ -77,6 +82,7 @@ fun UkhuwahApp(startDestination: String, authViewModel: AuthViewModel) {
             composable("register") {
                 RegisterScreen(
                     navController = navController,
+                    authViewModel = authViewModel,
                     contentPadding = innerPadding
                 )
             }

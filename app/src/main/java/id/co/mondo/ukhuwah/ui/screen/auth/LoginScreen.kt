@@ -20,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +44,9 @@ import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
 
     val context = LocalContext.current
+
+    var email: String by remember { mutableStateOf("") }
+    var password: String by remember { mutableStateOf("") }
 
     val loginState by viewModel.loginState.collectAsState()
 
@@ -107,35 +113,23 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         ) {
             TextFieldCustom(
                 modifier = Modifier.fillMaxWidth(),
-                values = viewModel.email,
+                values = email,
                 label = "Email",
                 onValueChange = {
-                    viewModel.email = it
+                   email = it
                 },
                 keyboardType = KeyboardType.Email,
             )
             TextFieldCustom(
                 modifier = Modifier.fillMaxWidth(),
-                values = viewModel.password,
+                values = password,
                 label = "Kata Sandi",
                 onValueChange = {
-                    viewModel.password = it
+                    password = it
                 },
                 isPasswordField = true,
                 keyboardType = KeyboardType.Password,
             )
-//            TextFieldCustom(
-//                modifier = Modifier.fillMaxWidth(),
-//                values = viewModel.confirmPassword,
-//                label = "Konfirmasi Kata Sandi",
-//                onValueChange = {
-//                    viewModel.confirmPassword = it
-//                },
-//                isPasswordField = true,
-//                keyboardType = KeyboardType.Password,
-//                isError = confirmPasswordError != null,
-//                errorMessage = confirmPasswordError
-//            )
         }
         Spacer(Modifier.height(32.dp))
         ButtonCustom(
@@ -144,8 +138,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
             onClick = {
                 Log.d("LOGIN", "Button clicked")
                 viewModel.login(
-                    email = viewModel.email,
-                    password = viewModel.password
+                    email = email,
+                    password = password
                 )
             }
         )
