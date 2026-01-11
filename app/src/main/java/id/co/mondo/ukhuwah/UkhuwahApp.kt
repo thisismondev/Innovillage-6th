@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -28,11 +27,10 @@ import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun UkhuwahApp(startDestination: String) {
+fun UkhuwahApp(startDestination: String, authViewModel: AuthViewModel) {
 
 
     val navController = rememberNavController()
-    val authViewModel: AuthViewModel = viewModel()
 
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -62,7 +60,7 @@ fun UkhuwahApp(startDestination: String) {
                 LoginScreen(navController, authViewModel)
             }
             composable("home") {
-                HomeScreen(navController)
+                HomeScreen(navController, authViewModel)
             }
             composable("detail") {
                 DetailScreen(
@@ -118,7 +116,7 @@ fun UkhuwahApp(startDestination: String) {
                     contentPadding = innerPadding
                 )
             }
-            composable("notification"){
+            composable("notification") {
                 NotificationScreen(
                     navController = navController,
                     contentPadding = innerPadding
