@@ -28,11 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import id.co.mondo.ukhuwah.R
+import id.co.mondo.ukhuwah.data.model.User
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParentCard(
+    user: User,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -78,9 +80,9 @@ fun ParentCard(
                                 color = Color.LightGray,
                                 shape = CircleShape
                             )
-                    ) {}
+                    )
                     Text(
-                        text = "La Ode",
+                        text = user.name ?: "",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold
                         ),
@@ -106,7 +108,7 @@ fun ParentCard(
             ) {
                 Column {
                     Text(
-                        text = "7306012121*****",
+                        text = user.nik ?: "",
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Light
@@ -114,7 +116,7 @@ fun ParentCard(
                         color = Color.Black,
                     )
                     Text(
-                        text = "umi@dosen.umi.ac.id",
+                        text = user.email ?: "",
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Light
@@ -122,7 +124,7 @@ fun ParentCard(
                         color = Color.Black,
                     )
                     Text(
-                        text = "08123456789",
+                        text = user.phone ?: "",
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Light
@@ -162,6 +164,12 @@ fun PreviewParentCard() {
     Innovillage6thTheme {
         Column(Modifier.fillMaxSize()) {
             ParentCard(
+                user = User(
+                    name = "Budi",
+                    nik = "1234567890123456",
+                    phone = "0000",
+                    email = "samuel.freeman.miller@altostrat.com",
+                ),
                 onClick = {
 
                 }

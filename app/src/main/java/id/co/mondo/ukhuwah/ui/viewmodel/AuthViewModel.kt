@@ -85,6 +85,7 @@ class AuthViewModel(
         _registerState.value = UiState.Loading
 
         viewModelScope.launch {
+// Tolong Buatkan Validasi nya nnti
 
 //            if (email.isBlank()) {
 //                _registerState.value = UiState.Error("Email wajib diisi")

@@ -140,7 +140,7 @@ fun HomeScreen(
                         text = "Keluar",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.tertiary
+                            color = Color.White
                         )
                     )
                 }
@@ -153,7 +153,7 @@ fun HomeScreen(
                         text = "Kembali",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onPrimary
+                            color = Color.White
                         )
                     )
                 }

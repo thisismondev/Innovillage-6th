@@ -35,6 +35,7 @@ fun UkhuwahApp(startDestination: String, authViewModel: AuthViewModel) {
     val navController = rememberNavController()
 
 
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -98,9 +99,11 @@ fun UkhuwahApp(startDestination: String, authViewModel: AuthViewModel) {
                     paddingvalues = innerPadding
                 )
             }
-            composable("profile-parent") {
+            composable("profile-parent/{id}") {
+                val id = it.arguments?.getString("id")
                 ProfileParentScreen(
                     navController = navController,
+                    idUser = id ?: "",
                     contentPadding = innerPadding
                 )
             }

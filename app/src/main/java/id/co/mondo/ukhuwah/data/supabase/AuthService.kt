@@ -50,7 +50,7 @@ class AuthService {
             Log.e(
                 "AuthService",
                 "Register GAGAL: ${e.message}",
-                e   // ini penting agar stacktrace muncul
+                e
             )
             Result.failure(e)
         }
@@ -67,4 +67,22 @@ class AuthService {
             Result.failure(e)
         }
     }
+
+    suspend fun updateUser(email: String): Result<Unit> {
+        return try {
+            supabase.auth.updateUser {
+                this.email = email
+            }
+            Log.d("AuthService", "Update user berhasil")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                "AuthService",
+                "Update user GAGAL: ${e.message}",
+                e
+            )
+            Result.failure(e)
+        }
+    }
+
 }
