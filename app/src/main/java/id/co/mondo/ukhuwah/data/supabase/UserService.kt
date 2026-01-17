@@ -1,9 +1,11 @@
 package id.co.mondo.ukhuwah.data.supabase
 
 import android.util.Log
+import id.co.mondo.ukhuwah.data.model.Children
 import id.co.mondo.ukhuwah.data.model.User
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
 
 class UserService {
 
@@ -64,13 +66,53 @@ class UserService {
                     }
                 }
                 .decodeSingle<User>()
-            Log.d("UserService", "Get all users sukses: $users")
+            Log.d("UserService", "Get user By Id sukses: $users")
             Result.success(users)
         } catch (e: Exception) {
-            Log.e("UserService", "Get all users GAGAL", e)
+            Log.e("UserService", "Get user By Id GAGAL", e)
             Result.failure(e)
         }
     }
+
+
+    suspend fun getAllChildWithMeasure(): Result<List<Children>> {
+        return try {
+            val select = Columns.raw(
+                """
+                id,
+                users_id,
+                name,
+                nik,
+                gender,
+                birth,
+                heightCm,
+                weightKg,
+                armCm,
+                headCm,
+                measurements(
+                    id,
+                    children_id,
+                    age_days,
+                    measured_at,
+                    heightCm,
+                    weightKg,
+                    armCm,
+                    headCm
+                )
+                """.trimIndent()
+            )
+            val child = supabase
+                .from("children")
+                .select(select)
+                .decodeList<Children>()
+            Log.d("UserService", "Get all children & Measure sukses: $child")
+            Result.success(child)
+        } catch (e: Exception) {
+            Log.e("UserService", "Get all children & Measure GAGAL", e)
+            Result.failure(e)
+        }
+    }
+
 
     suspend fun updateUser(user: User): Result<User> {
 
@@ -92,17 +134,17 @@ class UserService {
                         user.phone?.let { set("phone", it) }
                         user.address?.let { set("address", it) }
                     }
-                ){
+                ) {
                     select()
                     filter {
                         eq("id_users", user.id_users)
                     }
                 }
                 .decodeSingle<User>()
-            Log.d("UserService", "Get all users sukses: $user")
+            Log.d("UserService", "Update user sukses: $user")
             Result.success(user)
         } catch (e: Exception) {
-            Log.e("UserService", "Get all users GAGAL", e)
+            Log.e("UserService", "Update user GAGAL", e)
             Result.failure(e)
         }
     }

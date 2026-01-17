@@ -25,10 +25,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import id.co.mondo.ukhuwah.data.model.Measurements
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
 fun HistoryCard(
+    name: String? = "",
+    measure: Measurements,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -63,7 +66,7 @@ fun HistoryCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "08 Sep 20225",
+                    text = measure.measured_at.toString(),
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal
@@ -119,7 +122,7 @@ fun HistoryCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "La ode",
+                        text = name ?: "",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.Black,
                     )
@@ -127,10 +130,10 @@ fun HistoryCard(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        HistoryItem("BB (kg)", "0")
-                        HistoryItem("TB (cm)", "0")
-                        HistoryItem("LiLA (cm)", "0")
-                        HistoryItem("LK (cm)", "0")
+                        HistoryItem("BB (kg)", measure.weightKg ?: 0.0)
+                        HistoryItem("TB (cm)", measure.heightCm ?: 0.0)
+                        HistoryItem("LiLA (cm)", measure.armCm ?: 0.0)
+                        HistoryItem("LK (cm)", measure.headCm ?: 0.0)
                     }
                 }
             }
@@ -145,7 +148,7 @@ fun HistoryCard(
 @Composable
 fun HistoryItem(
     label: String,
-    value: String
+    value: Double
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
@@ -158,7 +161,7 @@ fun HistoryItem(
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = value,
+            text = value.toString(),
             style = MaterialTheme.typography.bodySmall.copy(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium
@@ -177,7 +180,14 @@ fun PreviewHistoryCard() {
             HistoryCard(
                 onClick = {
 
-                }
+                },
+                measure = Measurements(
+                    headCm = 0.0,
+                    weightKg = 0.0,
+                    armCm = 0.0,
+                    heightCm = 0.0
+                ),
+                name = "Bambang"
             )
         }
     }

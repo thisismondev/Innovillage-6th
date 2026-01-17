@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.co.mondo.ukhuwah.data.model.Children
+import id.co.mondo.ukhuwah.data.model.MeasureWithChild
 import id.co.mondo.ukhuwah.data.model.User
 import id.co.mondo.ukhuwah.data.supabase.AuthService
 import id.co.mondo.ukhuwah.data.supabase.UserService
@@ -21,6 +23,12 @@ class UserViewModel(
 
     private val _userState = MutableStateFlow<UiState<List<User>>>(UiState.Empty)
     val userState: StateFlow<UiState<List<User>>> = _userState
+
+    private val _childState = MutableStateFlow<UiState<List<Children>>>(UiState.Empty)
+    val childState: StateFlow<UiState<List<Children>>> = _childState
+
+    private val _measureChildState = MutableStateFlow<UiState<List<MeasureWithChild>>>(UiState.Empty)
+    val measureChildState: StateFlow<UiState<List<MeasureWithChild>>> = _measureChildState
 
     private val _userId = MutableStateFlow<UiState<User>>(UiState.Empty)
     val userId: StateFlow<UiState<User>> = _userId
@@ -65,6 +73,43 @@ class UserViewModel(
         }
     }
 
+    fun getAllMeasureChild() {
+        _measureChildState.value = UiState.Loading
+        viewModelScope.launch {
+            val response = userService.getAllChildWithMeasure()
+            response.onSuccess {
+                val allMeasure = it.flatMap { children ->
+                    children.measurements?.map { measure ->
+                        MeasureWithChild(
+                            id = children.id,
+                            name = children.name,
+                            measurements = measure
+                        )
+                    } ?: emptyList()
+                }
+                _measureChildState.value = UiState.Success(allMeasure)
+                Log.d("UserViewModel", "Get all children with measure sukses: $allMeasure")
+            }.onFailure {
+                _measureChildState.value = UiState.Error("Gagal mendapatkan data")
+                Log.d("UserViewModel", "Get all children with measure GAGAL: $it")
+            }
+        }
+    }
+
+    fun getAllChild(){
+        _childState.value = UiState.Loading
+        viewModelScope.launch {
+            val response = userService.getAllChildWithMeasure()
+            response.onSuccess {
+                _childState.value = UiState.Success(it)
+                Log.d("UserViewModel", "Get all children sukses: $it")
+            }.onFailure {
+                _childState.value = UiState.Error("Gagal mendapatkan data")
+                Log.d("UserViewModel", "Get all children GAGAL: $it")
+            }
+        }
+    }
+
     fun updateUser(user: User) {
         _userId.value = UiState.Loading
         viewModelScope.launch {
@@ -77,8 +122,6 @@ class UserViewModel(
                 Log.d("UserViewModel", "Update profil GAGAL: $it")
 
             }
-
-
 
 
         }

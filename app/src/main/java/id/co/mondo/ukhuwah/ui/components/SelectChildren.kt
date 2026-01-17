@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import id.co.mondo.ukhuwah.data.model.Children
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 import id.co.mondo.ukhuwah.ui.theme.Pink4
 
@@ -40,13 +41,8 @@ import id.co.mondo.ukhuwah.ui.theme.Pink4
 fun SelectChildren(
     selectedChild: String,
     onChildSelected: (String) -> Unit,
+    children: List<Children>
 ) {
-
-    val Children = listOf(
-        "Arnawati",
-        "La Ode Raihan",
-        "Mondo Ganteng"
-    )
 
     var showDropdown by remember { mutableStateOf(false) }
 
@@ -129,11 +125,11 @@ fun SelectChildren(
                         showDropdown = false
                     }
                 )
-                Children.forEach { child ->
+                children.forEach { child ->
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = child,
+                                text = child.name ?: "",
                                 style = MaterialTheme.typography.titleSmall.copy(
                                     fontWeight = FontWeight.Bold
                                 ),
@@ -141,7 +137,7 @@ fun SelectChildren(
                             )
                                },
                         onClick = {
-                            onChildSelected(child)
+                            onChildSelected(child.name ?: "")
                             showDropdown = false
                         }
                     )
@@ -164,7 +160,13 @@ fun PreviewSelectChildren() {
                 selectedChild = selectedChild,
                 onChildSelected = {
                     selectedChild = it
-                }
+                },
+                children = listOf(
+                    Children(name = "Anak 1"),
+                    Children(name = "Anak 2"),
+                    Children(name = "Anak 3")
+                )
+
             )
         }
     }

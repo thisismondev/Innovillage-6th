@@ -14,6 +14,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,12 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import id.co.mondo.ukhuwah.ui.common.UiState
 import id.co.mondo.ukhuwah.ui.components.AppTopBar
 import id.co.mondo.ukhuwah.ui.components.SelectChildren
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 import id.co.mondo.ukhuwah.ui.theme.Pink4
+import id.co.mondo.ukhuwah.ui.viewmodel.UserViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -37,11 +42,23 @@ fun DetailScreen(
     contentPadding: PaddingValues
 ) {
 
+    val userViewModel: UserViewModel = viewModel()
+    val childState by userViewModel.childState.collectAsState()
+
     val tabs = listOf("Statistik", "Perjalanan")
     var selectedTabIndex by remember { mutableStateOf(0) }
 
 
     var selectedChild by remember { mutableStateOf("Semua") }
+
+    val childrenForSelect = when (childState) {
+        is UiState.Success -> (childState as UiState.Success).data
+        else -> emptyList()
+    }
+
+    LaunchedEffect(Unit) {
+        userViewModel.getAllChild()
+    }
 
     Column(
         modifier = Modifier
@@ -56,7 +73,8 @@ fun DetailScreen(
             selectedChild = selectedChild,
             onChildSelected = {
                 selectedChild = it
-            }
+            },
+            children = childrenForSelect
         )
         Spacer(Modifier.height(12.dp))
         TabRow(

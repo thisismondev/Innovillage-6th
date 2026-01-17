@@ -58,7 +58,10 @@ fun TextFieldDateCustom(
         shape = RoundedCornerShape(14.dp),
 
         trailingIcon = {
-            IconButton(onClick = { showDialog = true }) {
+            IconButton(
+                onClick = { showDialog = true },
+                enabled = enabled
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.calendar),
                     contentDescription = "Pick date",
