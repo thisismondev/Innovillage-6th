@@ -7,10 +7,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import id.co.mondo.ukhuwah.ui.components.BottomBar
 import id.co.mondo.ukhuwah.ui.screen.HistoryScreen
 import id.co.mondo.ukhuwah.ui.screen.HomeScreen
@@ -33,7 +35,6 @@ fun UkhuwahApp(startDestination: String, authViewModel: AuthViewModel) {
 
 
     val navController = rememberNavController()
-
 
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -107,10 +108,19 @@ fun UkhuwahApp(startDestination: String, authViewModel: AuthViewModel) {
                     contentPadding = innerPadding
                 )
             }
-            composable("profile-children") {
+            composable(
+                route = "profile-children/{id}",
+                arguments = listOf(
+                    navArgument("id") {
+                        type = NavType.IntType
+                    }
+                )
+            ) {
+                val id = it.arguments?.getInt("id")
                 ProfileChildrenScreen(
                     navController = navController,
-                    contentPadding = innerPadding
+                    contentPadding = innerPadding,
+                    id = id ?: 0
                 )
             }
             composable("add-children") {

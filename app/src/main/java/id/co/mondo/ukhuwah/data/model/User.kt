@@ -12,5 +12,7 @@ data class User(
     val birth: String? = null,
     val phone: String? = null,
     val address: String? = null,
-    val role: String? = null
+    val role: String? = null,
+    val created_at: String? = null,
+    val children: List<Children>? = null
 )

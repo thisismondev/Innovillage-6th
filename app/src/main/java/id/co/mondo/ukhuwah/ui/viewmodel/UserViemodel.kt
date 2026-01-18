@@ -33,6 +33,9 @@ class UserViewModel(
     private val _userId = MutableStateFlow<UiState<User>>(UiState.Empty)
     val userId: StateFlow<UiState<User>> = _userId
 
+    private val _childId = MutableStateFlow<UiState<Children>>(UiState.Empty)
+    val childId: StateFlow<UiState<Children>> = _childId
+
 
     var isRefreshing by mutableStateOf(false)
         private set
@@ -110,6 +113,21 @@ class UserViewModel(
         }
     }
 
+    fun getChildById(id: Int) {
+        Log.d("UserViewModel", "Get child by Id: $id")
+        _childId.value = UiState.Loading
+        viewModelScope.launch {
+            val response = userService.getChildById(id)
+            response.onSuccess {
+                _childId.value = UiState.Success(it)
+                Log.d("UserViewModel", "Get child by Id sukses: $it")
+            }.onFailure {
+                _childId.value = UiState.Error("Gagal mendapatkan data")
+                Log.d("UserViewModel", "Get child by Id GAGAL: $it")
+            }
+        }
+    }
+
     fun updateUser(user: User) {
         _userId.value = UiState.Loading
         viewModelScope.launch {
@@ -124,6 +142,20 @@ class UserViewModel(
             }
 
 
+        }
+    }
+
+    fun updateChild(child: Children) {
+        _childId.value = UiState.Loading
+        viewModelScope.launch {
+            val response = userService.updateChild(child)
+            response.onSuccess {
+                _childId.value = UiState.Success(it)
+                Log.d("UserViewModel", "Update profile children sukses: $it")
+            }.onFailure {
+                _childId.value = UiState.Error("Gagal update profil")
+                Log.d("UserViewModel", "Update profil children GAGAL: $it")
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ data class Children(
     val weightKg: Double? = null,
     val armCm: Double? = null,
     val headCm: Double? = null,
+    val created_at: String? = null,
     val measurements: List<Measurements>? = null
 )
 
@@ -26,7 +27,8 @@ data class Measurements(
     val heightCm: Double? = null,
     val weightKg: Double? = null,
     val armCm: Double? = null,
-    val headCm: Double? = null
+    val headCm: Double? = null,
+    val created_at: String? = null
 ){
     val birthFormatted: String
         get() {

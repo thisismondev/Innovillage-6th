@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -85,6 +86,7 @@ fun ProfileParentScreen(
             phone = users.phone.orEmpty()
             address = users.address.orEmpty()
             email = users.email.orEmpty()
+
         }
     }
 
@@ -173,6 +175,10 @@ fun ProfileParentScreen(
         when (state) {
 
             is UiState.Success -> {
+                val user = (state as UiState.Success<User>).data
+                val children = user.children ?: emptyList()
+                val shorted = children.sortedByDescending{ it.created_at }
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -260,47 +266,51 @@ fun ProfileParentScreen(
                         }
                     }
                     item {
-                        Column(
-                            Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "Anak - Anak",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Color.Black
-                                )
-                                Text(
-                                    text = "Tambah",
-                                    style = MaterialTheme.typography.titleSmall.copy(
-                                        textDecoration = TextDecoration.Underline
-                                    ),
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.clickable(
-                                        onClick = {
-                                            navController.navigate("add-children")
-                                        }
-                                    )
-                                )
-                            }
-                            ChildrenCard(
-                                name = "Arnawati",
-                                onClick = {
-                                    navController.navigate("profile-children")
-                                }
+                            Text(
+                                text = "Anak - Anak",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.Black
                             )
-                            ChildrenCard(
-                                name = "La ode",
-                                onClick = {
-
-                                }
+                            Text(
+                                text = "Tambah",
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    textDecoration = TextDecoration.Underline
+                                ),
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.clickable(
+                                    onClick = {
+                                        navController.navigate("add-children")
+                                    }
+                                )
                             )
                         }
                     }
 
+                    if (shorted.isEmpty()) {
+                        item {
+                            Text(
+                                text = "Belum ada data anak",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.Gray,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp),
+                            )
+                        }
+                    } else {
+                        items(shorted) { child ->
+                            ChildrenCard(
+                                name = child.name ?: "Nama Anak",
+                                onClick = {
+                                    navController.navigate("profile-children/${child.id}")
+                                }
+                            )
+                        }
+                    }
                 }
             }
 

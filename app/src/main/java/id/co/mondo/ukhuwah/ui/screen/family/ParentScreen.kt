@@ -140,6 +140,8 @@ fun ParentScreen(
                     state = state
                 ) {
                     val users = (userState as UiState.Success<List<User>>).data
+                    val sorted = users.sortedByDescending { it.created_at }
+
 
                     LazyColumn(
                         modifier = Modifier
@@ -147,13 +149,14 @@ fun ParentScreen(
                         contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(users) {
+                        items(sorted) {
                             ParentCard(
                                 user = User(
                                     name = it.name,
                                     nik = it.nik,
                                     phone = it.phone,
-                                    email = it.email
+                                    email = it.email,
+                                    children = it.children
                                 ),
                                 onClick = {
                                     navController.navigate("profile-parent/${it.id_users}")

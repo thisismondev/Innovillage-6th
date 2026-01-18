@@ -37,6 +37,9 @@ fun ParentCard(
     user: User,
     onClick: () -> Unit
 ) {
+
+    val child = user.children?.size ?: 0
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 12.dp
@@ -145,7 +148,7 @@ fun ParentCard(
                         color = Color.Black,
                     )
                     Text(
-                        text = "2", style = MaterialTheme.typography.titleMedium,
+                        text = child.toString(), style = MaterialTheme.typography.titleMedium,
                         color = Color.Black,
                     )
                 }
