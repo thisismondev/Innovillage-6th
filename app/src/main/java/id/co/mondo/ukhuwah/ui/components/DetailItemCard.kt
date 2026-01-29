@@ -34,10 +34,12 @@ import id.co.mondo.ukhuwah.ui.theme.Pink4
 fun DetailItemCard(
     painter: Painter,
     title: String,
-    value: String
+    value: String,
+    sizeFont: Int = 32,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.size(150.dp),
+        modifier = modifier.size(150.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -88,7 +90,7 @@ fun DetailItemCard(
                     text = value,
                     color = Color.White,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 32.sp
+                        fontSize = sizeFont.sp
                     ),
                 )
             }

@@ -6,40 +6,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.co.mondo.ukhuwah.data.model.BalitaData
 import id.co.mondo.ukhuwah.data.model.Children
-import id.co.mondo.ukhuwah.data.model.MeasureWithChild
 import id.co.mondo.ukhuwah.data.model.User
-import id.co.mondo.ukhuwah.data.supabase.AuthService
+import id.co.mondo.ukhuwah.data.retrofit.ApiConfig
 import id.co.mondo.ukhuwah.data.supabase.UserService
+import id.co.mondo.ukhuwah.data.utils.calculateAgeFromBirthToNow
+import id.co.mondo.ukhuwah.data.utils.calculateAgeInMonths
+import id.co.mondo.ukhuwah.data.utils.calculateDateInMonth
 import id.co.mondo.ukhuwah.ui.common.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel(
     private val userService: UserService = UserService(),
-    private val authService: AuthService = AuthService()
 ) : ViewModel() {
+
+    private val apiService = ApiConfig.getApiService()
 
     private val _userState = MutableStateFlow<UiState<List<User>>>(UiState.Empty)
     val userState: StateFlow<UiState<List<User>>> = _userState
 
-    private val _childState = MutableStateFlow<UiState<List<Children>>>(UiState.Empty)
-    val childState: StateFlow<UiState<List<Children>>> = _childState
-
-    private val _measureChildState = MutableStateFlow<UiState<List<MeasureWithChild>>>(UiState.Empty)
-    val measureChildState: StateFlow<UiState<List<MeasureWithChild>>> = _measureChildState
-
     private val _userId = MutableStateFlow<UiState<User>>(UiState.Empty)
     val userId: StateFlow<UiState<User>> = _userId
 
-    private val _childId = MutableStateFlow<UiState<Children>>(UiState.Empty)
-    val childId: StateFlow<UiState<Children>> = _childId
-
-
     var isRefreshing by mutableStateOf(false)
         private set
-
 
     fun getAllUser(isRefresh: Boolean = false) {
         viewModelScope.launch {
@@ -65,66 +59,40 @@ class UserViewModel(
         _userId.value = UiState.Loading
         viewModelScope.launch {
             val response = userService.getUserById(id)
-            response.onSuccess {
-                Log.d("UserViewModel", "Get user by id sukses: $it")
-                _userId.value = UiState.Success(it)
+            response.onSuccess { user ->
+
+                if (user.id_users != id && user.id_users == null) {
+                    _userId.value = UiState.Error("User tidak ditemukan")
+                }
+
+                val mapUser = User(
+                    id_users = user.id_users,
+                    name = user.name,
+                    nik = user.nik,
+                    email = user.email,
+                    gender = user.gender,
+                    birth = user.birth,
+                    phone = user.phone,
+                    address = user.address,
+                    children = user.children?.map { children ->
+                        Children(
+                            id = children.id,
+                            name = children.name,
+                            ageResult = calculateAgeFromBirthToNow(
+                                birth = children.birth ?: ""
+                            )
+                        )
+                    }
+
+                )
+
+                Log.d("UserViewModel", "Get user by id sukses: $mapUser")
+                _userId.value = UiState.Success(mapUser)
             }.onFailure {
                 Log.d("UserViewModel", "Get user by id GAGAL: $it")
                 _userId.value = UiState.Error("Gagal mendapatkan data")
             }
 
-        }
-    }
-
-    fun getAllMeasureChild() {
-        _measureChildState.value = UiState.Loading
-        viewModelScope.launch {
-            val response = userService.getAllChildWithMeasure()
-            response.onSuccess {
-                val allMeasure = it.flatMap { children ->
-                    children.measurements?.map { measure ->
-                        MeasureWithChild(
-                            id = children.id,
-                            name = children.name,
-                            measurements = measure
-                        )
-                    } ?: emptyList()
-                }
-                _measureChildState.value = UiState.Success(allMeasure)
-                Log.d("UserViewModel", "Get all children with measure sukses: $allMeasure")
-            }.onFailure {
-                _measureChildState.value = UiState.Error("Gagal mendapatkan data")
-                Log.d("UserViewModel", "Get all children with measure GAGAL: $it")
-            }
-        }
-    }
-
-    fun getAllChild(){
-        _childState.value = UiState.Loading
-        viewModelScope.launch {
-            val response = userService.getAllChildWithMeasure()
-            response.onSuccess {
-                _childState.value = UiState.Success(it)
-                Log.d("UserViewModel", "Get all children sukses: $it")
-            }.onFailure {
-                _childState.value = UiState.Error("Gagal mendapatkan data")
-                Log.d("UserViewModel", "Get all children GAGAL: $it")
-            }
-        }
-    }
-
-    fun getChildById(id: Int) {
-        Log.d("UserViewModel", "Get child by Id: $id")
-        _childId.value = UiState.Loading
-        viewModelScope.launch {
-            val response = userService.getChildById(id)
-            response.onSuccess {
-                _childId.value = UiState.Success(it)
-                Log.d("UserViewModel", "Get child by Id sukses: $it")
-            }.onFailure {
-                _childId.value = UiState.Error("Gagal mendapatkan data")
-                Log.d("UserViewModel", "Get child by Id GAGAL: $it")
-            }
         }
     }
 
@@ -145,19 +113,70 @@ class UserViewModel(
         }
     }
 
-    fun updateChild(child: Children) {
-        _childId.value = UiState.Loading
+    private val _exportState = MutableStateFlow<UiState<String>>(UiState.Empty)
+    val exportState = _exportState.asStateFlow()
+
+    fun exportUsersByMonth(month: String) {
+        _exportState.value = UiState.Loading
+
         viewModelScope.launch {
-            val response = userService.updateChild(child)
-            response.onSuccess {
-                _childId.value = UiState.Success(it)
-                Log.d("UserViewModel", "Update profile children sukses: $it")
+            val result = userService.exportUsers()
+
+            result.onSuccess { children ->
+
+                // 1️⃣ MAPPING SEMUA CHILD → BALITADATA
+                val requestList = children.map { child ->
+                    val measurement = child.measurements?.firstOrNull{
+                        calculateDateInMonth(it.measured_at ?: "") == month
+                    }
+
+                    val ageMonth = calculateAgeInMonths(child.birth ?: "")
+
+                    BalitaData(
+                        nik = child.nik ?: "",
+                        namaAnak = child.name ?: "",
+                        tglLahir = child.birth ?: "",
+                        umur = ageMonth,
+                        jk = child.gender ?: "",
+                        namaOrtu = child.users?.name ?: "",
+                        nikOrtu = child.users?.nik ?: "",
+                        hp = child.users?.phone ?: "",
+                        alamat = child.users?.address ?: "",
+                        bulan = month,
+                        bb = measurement?.weightKg,
+                        tb = measurement?.heightCm,
+                        lila = measurement?.armCm,
+                        lkep = measurement?.headCm,
+                        status = measurement?.status
+                    )
+                }
+
+                try {
+                    // 2️⃣ KIRIM SEKALI SAJA
+                    val response = apiService.kirimData(requestList)
+
+                    if (response.isSuccessful && response.body()?.success == true) {
+                        _exportState.value =
+                            UiState.Success("Export ${response.body()?.processed} data berhasil")
+                    } else {
+                        _exportState.value =
+                            UiState.Error(response.body()?.message ?: "Gagal export")
+                    }
+
+                } catch (e: Exception) {
+                    _exportState.value =
+                        UiState.Error("Gagal mengirim data ke Excel")
+                }
+
             }.onFailure {
-                _childId.value = UiState.Error("Gagal update profil")
-                Log.d("UserViewModel", "Update profil children GAGAL: $it")
+                _exportState.value =
+                    UiState.Error("Gagal mengambil data dari Supabase")
             }
         }
     }
+
+
+
 }
 //            if (profileResult.isFailure) {
 //                _userId.value = UiState.Error("Gagal update profil")

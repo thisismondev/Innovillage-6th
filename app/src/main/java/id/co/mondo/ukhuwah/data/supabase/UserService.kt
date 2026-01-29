@@ -1,7 +1,12 @@
 package id.co.mondo.ukhuwah.data.supabase
 
 import android.util.Log
+import id.co.mondo.ukhuwah.data.model.ChildExport
 import id.co.mondo.ukhuwah.data.model.Children
+import id.co.mondo.ukhuwah.data.model.InsertChildren
+import id.co.mondo.ukhuwah.data.model.InsertUser
+import id.co.mondo.ukhuwah.data.model.NewMeasure
+import id.co.mondo.ukhuwah.data.model.RoleUser
 import id.co.mondo.ukhuwah.data.model.User
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
@@ -12,31 +17,92 @@ class UserService {
     private val supabase = SupabaseConfig.client
 
 
-    suspend fun createUser(user: User): Result<User> {
+    suspend fun createUser(user: InsertUser): Result<String> {
         return try {
-            val authUserId = supabase.auth.currentUserOrNull()?.id ?: return Result.failure(
-                Exception("Auth user tidak ditemukan")
-            )
-            Log.d("UserService", "Auth user ditemukan: $authUserId")
-
-            val email = supabase.auth.currentUserOrNull()?.email ?: return Result.failure(
-                Exception("Email user tidak ditemukan")
-            )
-            Log.d("UserService", "Email user ditemukan: $email")
-
-            val profile = user.copy(id_users = authUserId, email = email)
-            Log.d("UserService", "Profile siap disimpan: $profile")
-
-            supabase.from("users").insert(profile)
-            Log.d("UserService", "Insert profile sukses")
-            Result.success(profile)
+            val result = supabase.from("users").insert(user)
+            Log.d("UserService", "Insert profile sukses: $result")
+            Result.success("Berhasil membuat User")
         } catch (e: Exception) {
             Log.e("UserService", "Insert profile GAGAL", e)
             Result.failure(e)
-
         }
-
     }
+
+    suspend fun getUserRole(): Result<RoleUser> {
+        return try {
+            val userId = supabase.auth.currentUserOrNull()?.id
+                ?: return Result.failure(Exception("User belum login"))
+            val select = Columns.raw(
+                """
+                    id_users,
+                    name,
+                    role
+                """.trimIndent()
+            )
+
+            val roleUser = supabase
+                .from("users")
+                .select(select) {
+                    filter {
+                        eq("id_users", userId)
+                    }
+                }
+                .decodeSingle<RoleUser>()
+
+            Log.d("AuthService", "Role user = $roleUser")
+
+            Result.success(roleUser)
+
+        } catch (e: Exception) {
+            Log.e("AuthService", "Gagal ambil role", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun exportUsers(): Result<List<ChildExport>> {
+        return try {
+            val select = Columns.raw(
+                """
+                id,
+                users_id,
+                name,
+                nik,
+                gender,
+                birth,
+                users(
+                   id_users,
+                   name,
+                   nik,
+                   phone,
+                   address,
+                   role
+                ),
+                measurements(
+                    id,
+                    children_id,
+                    measured_at,
+                    heightCm,
+                    weightKg,
+                    armCm,
+                    headCm
+                )
+                """.trimIndent()
+            )
+            val child = supabase
+                .from("children")
+                .select(select)
+                .decodeList<ChildExport>()
+                .filter {
+                    (it.users?.role == "Parent")
+                }
+
+            Log.d("UserService", "Export Select Child sukses: $child")
+            Result.success(child)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
     suspend fun getAllUsers(): Result<List<User>> {
         return try {
@@ -69,6 +135,38 @@ class UserService {
             Result.success(users)
         } catch (e: Exception) {
             Log.e("UserService", "Get all users GAGAL", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getAllUsersWithChild(): Result<List<User>> {
+        return try {
+            val select = Columns.raw(
+                """
+                id_users,
+                name,
+                birth,
+                phone,
+                role,
+                children(
+                   id,
+                    name,
+                    birth
+                )
+                """.trimIndent()
+            )
+            val users = supabase
+                .from("users")
+                .select(select) {
+                    filter {
+                        eq("role", "Parent")
+                    }
+                }
+                .decodeList<User>()
+            Log.d("UserService", "Get all users sukses: $users")
+            Result.success(users)
+        } catch (e: Exception) {
+            Log.e("UserService", "Get all users with child GAGAL", e)
             Result.failure(e)
         }
     }
@@ -160,7 +258,17 @@ class UserService {
                 heightCm,
                 weightKg,
                 armCm,
-                headCm
+                headCm,
+                created_at,
+                measurements(
+                    id,
+                    children_id,
+                    measured_at,
+                    heightCm,
+                    weightKg,
+                    armCm,
+                    headCm
+                )
                 """.trimIndent()
             )
             val child = supabase
@@ -232,10 +340,10 @@ class UserService {
                 weightKg,
                 armCm,
                 headCm,
+                created_at,
                 measurements(
                     id,
                     children_id,
-                    age_days,
                     measured_at,
                     heightCm,
                     weightKg,
@@ -255,4 +363,35 @@ class UserService {
             Result.failure(e)
         }
     }
+
+    suspend fun insertNewMeasureChild(
+        measure: NewMeasure
+    ): Result<Unit> {
+        return try {
+            val result = supabase
+                .from("measurements")
+                .insert(measure)
+            Log.d("UserService", "Insert new Measure sukses: $result")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("UserService", "Insert new Measure GAGAL", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun insertNewChildUser(child: InsertChildren): Result<Unit> {
+        return try {
+            val result = supabase
+                .from("children")
+                .insert(child)
+            Log.d("UserService", "Insert new child sukses: $result")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("UserService", "Insert new child GAGAL", e)
+            Result.failure(e)
+        }
+
+
+    }
+
 }

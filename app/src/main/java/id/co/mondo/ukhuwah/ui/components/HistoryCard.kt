@@ -25,13 +25,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import id.co.mondo.ukhuwah.data.model.Measurements
+import id.co.mondo.ukhuwah.data.model.AgeResult
+import id.co.mondo.ukhuwah.data.model.ChildWithMeasure
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
 fun HistoryCard(
-    name: String? = "",
-    measure: Measurements,
+    measure: ChildWithMeasure,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -77,7 +77,7 @@ fun HistoryCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "0 Tahun",
+                        text = "${measure.ageResult?.years} Tahun",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal
@@ -85,7 +85,7 @@ fun HistoryCard(
                         color = Color.White
                     )
                     Text(
-                        text = "0 Bulan",
+                        text = "${measure.ageResult?.months} Bulan",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal
@@ -93,7 +93,7 @@ fun HistoryCard(
                         color = Color.White
                     )
                     Text(
-                        text = "0 Hari",
+                        text = "${measure.ageResult?.days} Hari",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal
@@ -122,7 +122,7 @@ fun HistoryCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = name ?: "",
+                        text = measure.name.toString(),
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.Black,
                     )
@@ -181,13 +181,22 @@ fun PreviewHistoryCard() {
                 onClick = {
 
                 },
-                measure = Measurements(
-                    headCm = 0.0,
-                    weightKg = 0.0,
-                    armCm = 0.0,
-                    heightCm = 0.0
-                ),
-                name = "Bambang"
+                measure = ChildWithMeasure(
+                    children_id = 1,
+                    name = "Rafiq",
+                    id = 1,
+                    birth = "12-12-2000",
+                    measured_at = "12-12-2023",
+                    heightCm = 160.0,
+                    weightKg = 60.0,
+                    armCm = 40.0,
+                    headCm = 30.0,
+                    ageResult = AgeResult(
+                        years = 0,
+                        months = 0,
+                        days = 0
+                    )
+                )
             )
         }
     }

@@ -34,6 +34,8 @@ fun TextFieldCustom(
     label: String,
     onValueChange: (String) -> Unit,
     isPasswordField: Boolean = false,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     enabled: Boolean = true,
     singleLine: Boolean = true,
@@ -52,16 +54,20 @@ fun TextFieldCustom(
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Gray
             )
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            focusedBorderColor = Color.LightGray,
             unfocusedBorderColor = Color.LightGray,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedLabelColor = Color.Black,
+            errorSupportingTextColor = Color.Red,
+            errorLabelColor = Color.Black,
+            errorBorderColor = Color.Red,
+            errorCursorColor = MaterialTheme.colorScheme.primary,
             cursorColor = MaterialTheme.colorScheme.primary
         ),
-
+        isError = isError,
+        supportingText = supportingText,
         modifier = modifier,
         singleLine = singleLine,
         minLines = minLines,
@@ -132,7 +138,7 @@ fun TextFieldCustomPreview() {
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
         }
     }
 }

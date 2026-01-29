@@ -47,7 +47,7 @@ fun TextFieldDateCustom(
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Gray
+                color = if (enabled) Color.Black else Color.Gray
             )
         },
         modifier = modifier,
@@ -72,9 +72,13 @@ fun TextFieldDateCustom(
         },
 
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            focusedBorderColor = Color.LightGray,
             unfocusedBorderColor = Color.LightGray,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedLabelColor = Color.Black,
+            errorSupportingTextColor = Color.Red,
+            errorLabelColor = Color.Black,
+            errorBorderColor = Color.Red,
+            errorCursorColor = MaterialTheme.colorScheme.primary,
             cursorColor = MaterialTheme.colorScheme.primary
         ),
 

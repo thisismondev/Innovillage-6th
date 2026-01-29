@@ -38,6 +38,7 @@ fun FilterDropdown(
     placeholder: String = "Pilih",
     selectedValue: String,
     items: List<String>,
+    enabled: Boolean = true,
     onItemSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -49,7 +50,7 @@ fun FilterDropdown(
                 .fillMaxWidth()
                 .height(40.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .clickable { expanded = true }
+                .clickable(enabled = enabled) { expanded = true }
                 .border(
                     width = 1.dp,
                     color = MaterialTheme.colorScheme.primary,
@@ -113,6 +114,7 @@ fun PreviewFilterDropdown(){
                 onItemSelected = {
 
                 },
+                enabled = false,
                 modifier = Modifier.weight(1F)
             )
             FilterDropdown(
@@ -124,6 +126,7 @@ fun PreviewFilterDropdown(){
                 onItemSelected = {
 
                 },
+                enabled = false,
                 modifier = Modifier.width(150.dp)
             )
         }

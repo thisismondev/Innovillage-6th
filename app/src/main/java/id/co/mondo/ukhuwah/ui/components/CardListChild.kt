@@ -26,15 +26,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import id.co.mondo.ukhuwah.R
+import id.co.mondo.ukhuwah.data.model.AgeResult
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 
 @Composable
-fun ChildrenCard(
+fun CardListCard(
     name: String,
+    ageResult: AgeResult?,
     onClick: () -> Unit,
     showIcon: Boolean = true,
     select: Boolean = true
 ) {
+    val years = ageResult?.years ?: 0
+    val months = ageResult?.months ?: 0
+    val days = ageResult?.days ?: 0
+
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,9 +52,9 @@ fun ChildrenCard(
         border = BorderStroke(
             width = 1.dp,
             color =
-                if (select){
+                if (select) {
                     MaterialTheme.colorScheme.primary
-                }else{
+                } else {
                     Color.LightGray
                 }
         )
@@ -82,7 +88,7 @@ fun ChildrenCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "0 Tahun",
+                        text = "$years Tahun",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal
@@ -90,7 +96,7 @@ fun ChildrenCard(
                         color = Color.Gray
                     )
                     Text(
-                        text = "0 Bulan",
+                        text = "$months Bulan",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal
@@ -98,7 +104,7 @@ fun ChildrenCard(
                         color = Color.Gray
                     )
                     Text(
-                        text = "0 Hari",
+                        text = "$days Hari",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal
@@ -107,7 +113,7 @@ fun ChildrenCard(
                     )
                 }
             }
-            if (showIcon){
+            if (showIcon) {
                 Icon(
                     painter = painterResource(R.drawable.chevronright),
                     contentDescription = null,
@@ -129,11 +135,16 @@ fun PreviewChildrenCard() {
                 .fillMaxSize()
                 .padding(vertical = 20.dp)
         ) {
-            ChildrenCard(
+            CardListCard(
                 name = "La ode",
                 onClick = {
 
-                }
+                },
+                ageResult = AgeResult(
+                    years = 0,
+                    months = 0,
+                    days = 0
+                )
             )
         }
     }

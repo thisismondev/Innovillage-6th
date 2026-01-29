@@ -14,6 +14,6 @@ fun GrowthContent(){
         Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Text("Kosong")
+        Text("Dalam pengembangan")
     }
 }

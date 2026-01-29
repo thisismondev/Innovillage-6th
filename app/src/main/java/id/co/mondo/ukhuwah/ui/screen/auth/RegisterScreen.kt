@@ -1,5 +1,6 @@
 package id.co.mondo.ukhuwah.ui.screen.auth
 
+import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import id.co.mondo.ukhuwah.data.model.User
+import id.co.mondo.ukhuwah.data.model.InsertUser
 import id.co.mondo.ukhuwah.ui.common.UiState
 import id.co.mondo.ukhuwah.ui.components.AppTopBar
 import id.co.mondo.ukhuwah.ui.components.ButtonCustom
@@ -48,6 +49,8 @@ fun RegisterScreen(
 ) {
     val context = LocalContext.current
 
+    val registerState by authViewModel.registerState.collectAsState()
+
     var email: String by rememberSaveable { mutableStateOf("") }
     var password: String by rememberSaveable { mutableStateOf("") }
     var confirmPassword: String by rememberSaveable { mutableStateOf("") }
@@ -58,7 +61,23 @@ fun RegisterScreen(
     var phone: String by rememberSaveable { mutableStateOf("") }
     var address: String by rememberSaveable { mutableStateOf("") }
 
-    val registerState by authViewModel.registerState.collectAsState()
+    val showEmailNotInvalid = email.isNotEmpty() &&
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val showPasswordError = password.isNotEmpty() && password.length < 6
+    val showConfirmPasswordError = confirmPassword.isNotEmpty() && confirmPassword != password
+
+    val isFormValid = !showEmailNotInvalid &&
+            !showPasswordError &&
+            !showConfirmPasswordError &&
+            name.isNotEmpty() &&
+            nik.isNotEmpty() &&
+            gender.isNotEmpty() &&
+            birthDate.isNotEmpty() &&
+            phone.isNotEmpty() &&
+            address.isNotEmpty()
+
+
+
     LaunchedEffect(registerState) {
         when (registerState) {
             is UiState.Success -> {
@@ -74,6 +93,7 @@ fun RegisterScreen(
                     popUpTo("register") { inclusive = true }
                 }
             }
+
             is UiState.Error -> {
                 Toast.makeText(
                     context,
@@ -118,7 +138,7 @@ fun RegisterScreen(
             modifier = Modifier
                 .fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             item {
                 Text(
@@ -140,7 +160,8 @@ fun RegisterScreen(
                         onValueChange = {
                             name = it
                         },
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Text,
+                        singleLine = true,
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
@@ -149,7 +170,8 @@ fun RegisterScreen(
                         onValueChange = {
                             nik = it
                         },
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Number,
+                        singleLine = true,
                     )
                     GenderField(
                         selectedGender = gender,
@@ -170,16 +192,18 @@ fun RegisterScreen(
                         onValueChange = {
                             phone = it
                         },
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Number,
+                        singleLine = true,
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
-                        values =address,
+                        values = address,
                         label = "Alamat",
                         onValueChange = {
                             address = it
                         },
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Text,
+                        singleLine = true,
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
@@ -188,17 +212,43 @@ fun RegisterScreen(
                         onValueChange = {
                             email = it
                         },
-                        keyboardType = KeyboardType.Email
+                        keyboardType = KeyboardType.Email,
+                        singleLine = true,
+                        isError = showEmailNotInvalid,
+                        supportingText = if (showEmailNotInvalid) {
+                            {
+                                Text(
+                                    text = "Email tidak valid",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontSize = 10.sp
+                                    )
+                                )
+                            }
+
+                        } else null
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
                         values = password,
                         label = "Kata Sandi",
                         onValueChange = {
-                           password = it
+                            password = it
                         },
                         keyboardType = KeyboardType.Password,
-                        isPasswordField = true
+                        isPasswordField = true,
+                        isError = showPasswordError,
+                        singleLine = true,
+                        supportingText = if (showPasswordError) {
+                            {
+                                Text(
+                                    text = "Password minimal 6 karakter",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontSize = 10.sp
+                                    )
+                                )
+                            }
+                        } else null
+
                     )
                     TextFieldCustom(
                         modifier = Modifier.fillMaxWidth(),
@@ -208,12 +258,21 @@ fun RegisterScreen(
                             confirmPassword = it
                         },
                         keyboardType = KeyboardType.Password,
-                        isPasswordField = true
+                        singleLine = true,
+                        isPasswordField = true,
+                        isError = showConfirmPasswordError,
+                        supportingText = if (showConfirmPasswordError) {
+                            {
+                                Text(
+                                    text = "Password tidak sama",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontSize = 10.sp
+                                    )
+                                )
+                            }
+                        } else null
                     )
-
                 }
-
-
             }
             item {
                 ButtonCustom(
@@ -221,10 +280,10 @@ fun RegisterScreen(
                     label = "Daftar",
                     onClick = {
                         authViewModel.createAccount(
-                            email =email,
+                            email = email,
                             password = password,
                             confirmPassword = confirmPassword,
-                            user = User(
+                            user = InsertUser(
                                 name = name,
                                 nik = nik,
                                 gender = gender,
@@ -233,7 +292,8 @@ fun RegisterScreen(
                                 address = address,
                             )
                         )
-                    }
+                    },
+                    enabled = isFormValid
                 )
             }
         }

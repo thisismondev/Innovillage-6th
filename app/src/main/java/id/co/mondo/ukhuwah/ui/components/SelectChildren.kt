@@ -40,7 +40,7 @@ import id.co.mondo.ukhuwah.ui.theme.Pink4
 @Composable
 fun SelectChildren(
     selectedChild: String,
-    onChildSelected: (String) -> Unit,
+    onChildSelected: (Int) -> Unit,
     children: List<Children>
 ) {
 
@@ -113,7 +113,7 @@ fun SelectChildren(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = "Semua",
+                            text = "Pilih Anak",
                             style = MaterialTheme.typography.titleSmall.copy(
                                 fontWeight = FontWeight.Bold
                             ),
@@ -121,7 +121,7 @@ fun SelectChildren(
                         )
                     },
                     onClick = {
-                        onChildSelected("Semua")
+                        onChildSelected(-1)
                         showDropdown = false
                     }
                 )
@@ -129,15 +129,15 @@ fun SelectChildren(
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = child.name ?: "",
+                                text = child.name ?: "-",
                                 style = MaterialTheme.typography.titleSmall.copy(
                                     fontWeight = FontWeight.Bold
                                 ),
                                 color = Color.Black
                             )
-                               },
+                        },
                         onClick = {
-                            onChildSelected(child.name ?: "")
+                            onChildSelected(child.id ?: -1)
                             showDropdown = false
                         }
                     )
@@ -158,15 +158,14 @@ fun PreviewSelectChildren() {
         ) {
             SelectChildren(
                 selectedChild = selectedChild,
-                onChildSelected = {
-                    selectedChild = it
+                onChildSelected = { id ->
+                    selectedChild = id.toString()
                 },
                 children = listOf(
-                    Children(name = "Anak 1"),
-                    Children(name = "Anak 2"),
-                    Children(name = "Anak 3")
+                    Children(
+                        name = ""
+                    )
                 )
-
             )
         }
     }

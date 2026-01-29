@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -29,7 +30,7 @@ fun SearchField(
         onValueChange = onQueryChange,
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp),
+            .height(46.dp),
         singleLine = true,
         placeholder = {
             Text(
@@ -44,7 +45,10 @@ fun SearchField(
         ),
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.Search, contentDescription = null, modifier = Modifier.size(24.dp)
+                imageVector = Icons.Default.Search,
+                contentDescription = null,
+                tint = Color.Gray,
+                modifier = Modifier.size(24.dp)
             )
         },
         trailingIcon = {

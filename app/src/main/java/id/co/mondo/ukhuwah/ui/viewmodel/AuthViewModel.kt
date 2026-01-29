@@ -3,7 +3,7 @@ package id.co.mondo.ukhuwah.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.co.mondo.ukhuwah.data.model.User
+import id.co.mondo.ukhuwah.data.model.InsertUser
 import id.co.mondo.ukhuwah.data.supabase.AuthService
 import id.co.mondo.ukhuwah.data.supabase.UserService
 import id.co.mondo.ukhuwah.ui.common.UiState
@@ -26,15 +26,39 @@ class AuthViewModel(
     private val _logoutState = MutableStateFlow<UiState<String>>(UiState.Empty)
     val logoutState: StateFlow<UiState<String>> = _logoutState
 
-    private val _isLoggedIn = MutableStateFlow<Boolean?>(null)
+    private val _isCheckingSession = MutableStateFlow(true)
+    val isCheckingSession = _isCheckingSession.asStateFlow()
+
+    private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn = _isLoggedIn.asStateFlow()
 
+    private val _userRole = MutableStateFlow<String?>(null)
+    val userRole = _userRole.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _isLoggedIn.value = authService.restoreSession()
+            val loggedIn = authService.restoreSession()
+            if (loggedIn) {
+                loadUserRole()
+            }
+
+            _isLoggedIn.value = loggedIn
+            _isCheckingSession.value = false
         }
     }
+
+    private suspend fun loadUserRole() {
+        val result = userService.getUserRole()
+        result.onSuccess { user ->
+            Log.d("AuthViewModel", "Role user = $user")
+            _userRole.value = user.role
+        }.onFailure {
+            Log.e("AuthViewModel", "Gagal ambil role", it)
+            _isLoggedIn.value = false
+            _userRole.value = null
+        }
+    }
+
 
     fun login(email: String, password: String) {
         _loginState.value = UiState.Loading
@@ -51,6 +75,7 @@ class AuthViewModel(
             val response = authService.login(email, password)
             response.onSuccess {
                 Log.d("Login", "Login berhasil $email ")
+                loadUserRole()
                 _isLoggedIn.value = true
                 _loginState.value = UiState.Success("Login Berhasil")
             }.onFailure {
@@ -69,9 +94,9 @@ class AuthViewModel(
 
     fun logout() {
         viewModelScope.launch {
-            _isLoggedIn.value = false
-            Log.d("Logout", "Logout berhasil : ${_isLoggedIn.value}")
             authService.logout()
+            _isLoggedIn.value = false
+            _userRole.value = null
             Log.d("Logout", "Logout berhasil : ${_isLoggedIn.value}")
         }
     }
@@ -80,44 +105,68 @@ class AuthViewModel(
         email: String,
         password: String,
         confirmPassword: String,
-        user: User
+        user: InsertUser
     ) {
         _registerState.value = UiState.Loading
 
         viewModelScope.launch {
-// Tolong Buatkan Validasi nya nnti
 
-//            if (email.isBlank()) {
-//                _registerState.value = UiState.Error("Email wajib diisi")
-//                return@launch
-//            }
-//
-//            if (password.isBlank()) {
-//                _registerState.value = UiState.Error("Password wajib diisi")
-//                return@launch
-//            }
-//
+            if (email.isBlank()) {
+                _registerState.value = UiState.Error("Email wajib diisi")
+                return@launch
+            }
+
+            if (password.length < 6) {
+                _registerState.value = UiState.Error("Password minimal 6 karakter")
+                return@launch
+            }
             if (password != confirmPassword) {
                 _registerState.value = UiState.Error("Password tidak sama")
                 return@launch
             }
 
-            authService.register(email, password)
-                .onFailure {
-                    Log.d("CreateAccount", "Gagal Membuat Akun $email")
-                    _registerState.value = UiState.Error("Gagal Membuat Akun")
-                    return@launch
-                }
+            if (
+                user.name.isNullOrBlank() ||
+                user.nik.isNullOrBlank() ||
+                user.gender.isNullOrBlank() ||
+                user.birth.isNullOrBlank() ||
+                user.phone.isNullOrBlank() ||
+                user.address.isNullOrBlank()
+            ) {
+                _registerState.value =
+                    UiState.Error("Semua data user wajib diisi")
+                return@launch
+            }
 
-            userService.createUser(user)
-                .onSuccess {
-                    _registerState.value = UiState.Success("Buat Akun Berhasil")
-                    Log.d("CreateAccount", "Buat Akun berhasil $email")
+            val responseAuth = authService.register(email, password)
+            responseAuth.onSuccess { account ->
+                val setUser = InsertUser(
+                    id_users = account.id,
+                    email = account.email,
+                    name = user.name,
+                    nik = user.nik,
+                    gender = user.gender,
+                    birth = user.birth,
+                    phone = user.phone,
+                    address = user.address
+                )
+
+                val responseUser = userService.createUser(setUser)
+                responseUser.onSuccess {
+                    _registerState.value = UiState.Success("Buat Akun User Berhasil")
+                    Log.d("CreateAccount", "Buat Akun user berhasil $setUser")
+                }.onFailure {
+                    Log.d("CreateAccount", "Gagal Menyimpan Profile $setUser")
+                    val deleteAuth = authService.deleteUser(account.id)
+                    Log.d("CreateAccount", "Hapus Akun di Auth berhasil $deleteAuth")
+                    _registerState.value = UiState.Error("Gagal Membuat Akun User")
                 }
-                .onFailure {
-                    Log.d("CreateAccount", "Gagal Menyimpan Profile $email")
-                    _registerState.value = UiState.Error("Gagal menyimpan Profile")
-                }
+            }.onFailure {
+                Log.d("CreateAccount", "Error: ${it.message}")
+                _registerState.value = UiState.Error(it.message ?: "Gagal Membuat Akun")
+                return@launch
+            }
+
         }
     }
 

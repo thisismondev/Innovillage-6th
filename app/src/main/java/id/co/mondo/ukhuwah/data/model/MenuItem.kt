@@ -17,7 +17,7 @@ data class MenuItem(
 )
 
 
-val menuItems = listOf(
+val menuItemsKader = listOf(
     MenuItem(
         title = "Statistik Pertumbuhan",
         icon = R.drawable.statistik,
@@ -51,4 +51,24 @@ val menuItems = listOf(
         color = exanak,
         routes = ""
     ),
+)
+
+val menuItemsParent = listOf(
+    MenuItem(
+        title = "Statistik Pertumbuhan",
+        icon = R.drawable.statistik,
+        color = statper,
+        routes = "detail"
+    ),
+    MenuItem(
+        title = "Perjalanan Pertumbuhan",
+        icon = R.drawable.babyfeet,
+        color = jalper,
+        routes = "detail"
+    ),MenuItem(
+        title = "Informasi Kesehatan",
+        icon = R.drawable.openbook,
+        color = inkes,
+        routes = "health"
+    )
 )

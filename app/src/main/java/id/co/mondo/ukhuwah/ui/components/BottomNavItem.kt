@@ -27,3 +27,25 @@ enum class BottomNavItem(
         icon = R.drawable.parent,
     )
 }
+
+enum class BottomNavItemParent(
+    val route: String,
+    val icon: Int,
+) {
+    HOME(
+        route = "home_parent",
+        icon = R.drawable.home
+    ),
+    DETAIL(
+        route = "detail",
+        icon = R.drawable.detail
+    ),
+    HISTORY(
+        route = "history",
+        icon = R.drawable.history,
+    ),
+    PROFILE(
+        route = "profile",
+        icon = R.drawable.profile,
+    )
+}

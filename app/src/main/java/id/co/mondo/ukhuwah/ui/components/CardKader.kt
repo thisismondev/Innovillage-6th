@@ -18,6 +18,8 @@ import id.co.mondo.ukhuwah.ui.theme.Pink4
 
 @Composable
 fun CardKader(
+    countChild: String,
+    countMeasure: String
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -36,8 +38,8 @@ fun CardKader(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            StatItemCard(title = "Jumlah Anak", value = "10")
-            StatItemCard(title = "Pemeriksaan Bulan ini", value = "10")
+            StatItemCard(title = "Jumlah Anak", value = countChild)
+            StatItemCard(title = "Pemeriksaan Bulan ini", value = countMeasure)
         }
     }
 
@@ -54,7 +56,10 @@ fun PreviewCardKader() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            CardKader()
+            CardKader(
+                countChild = "10",
+                countMeasure = "5"
+            )
         }
     }
 }

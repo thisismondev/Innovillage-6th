@@ -39,7 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.data.model.User
 import id.co.mondo.ukhuwah.ui.common.UiState
 import id.co.mondo.ukhuwah.ui.components.AppTopBar
-import id.co.mondo.ukhuwah.ui.components.ChildrenCard
+import id.co.mondo.ukhuwah.ui.components.CardListCard
 import id.co.mondo.ukhuwah.ui.components.GenderField
 import id.co.mondo.ukhuwah.ui.components.TextFieldCustom
 import id.co.mondo.ukhuwah.ui.components.TextFieldDateCustom
@@ -303,11 +303,12 @@ fun ProfileParentScreen(
                         }
                     } else {
                         items(shorted) { child ->
-                            ChildrenCard(
+                            CardListCard(
                                 name = child.name ?: "Nama Anak",
                                 onClick = {
                                     navController.navigate("profile-children/${child.id}")
-                                }
+                                },
+                                ageResult = child.ageResult
                             )
                         }
                     }

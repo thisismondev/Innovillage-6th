@@ -1,6 +1,7 @@
 package id.co.mondo.ukhuwah.ui.screen
 
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -14,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import id.co.mondo.ukhuwah.data.model.menuItems
-import id.co.mondo.ukhuwah.data.utils.MonthYearUtils
+import id.co.mondo.ukhuwah.data.model.menuItemsKader
+import id.co.mondo.ukhuwah.data.utils.getAvailableMonthsByYear
 import id.co.mondo.ukhuwah.ui.common.UiState
 import id.co.mondo.ukhuwah.ui.components.ButtonCustom
 import id.co.mondo.ukhuwah.ui.components.CardKader
@@ -55,9 +55,10 @@ import id.co.mondo.ukhuwah.ui.components.HeaderKader
 import id.co.mondo.ukhuwah.ui.components.NavItemCard
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
+import id.co.mondo.ukhuwah.ui.viewmodel.ChildViewModel
+import id.co.mondo.ukhuwah.ui.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -65,7 +66,17 @@ fun HomeScreen(
     authViewModel: AuthViewModel
 ) {
 
+    LaunchedEffect(Unit) {
+        Log.d("HomeScreen", "Home Screen terpanggil")
+    }
+
     val context = LocalContext.current
+
+
+    val childViewModel: ChildViewModel = viewModel()
+    val userViewModel: UserViewModel = viewModel()
+    val childState by childViewModel.countChildMeasureState.collectAsState()
+    val exportState by userViewModel.exportState.collectAsState()
 
     val logoutState by authViewModel.logoutState.collectAsState()
 
@@ -75,11 +86,50 @@ fun HomeScreen(
 
     var showDialog by remember { mutableStateOf(false) }
 
-    val currentDate = MonthYearUtils.currentYearMonth()
-    var selectedDate by remember { mutableStateOf(currentDate) }
+    val selectedYear = "2026"
+    val monthList = remember(selectedYear) {
+        getAvailableMonthsByYear(selectedYear)
+    }
+    var selectedMonth by remember { mutableStateOf(monthList.first()) }
 
-    val yearList = MonthYearUtils.yearList(2024)
-    val monthList = MonthYearUtils.monthList(selectedDate.year)
+    LaunchedEffect(exportState) {
+        when (exportState) {
+            is UiState.Success -> {
+                Toast.makeText(
+                    context,
+                    "File berhasil disimpan di Download",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is UiState.Error -> {
+                Toast.makeText(
+                    context,
+                    (exportState as UiState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> Unit
+        }
+    }
+
+
+    LaunchedEffect(Unit) {
+        childViewModel.getCountChildMeasure()
+    }
+
+
+    val countChild = when (childState) {
+        is UiState.Success -> (childState as UiState.Success).data.countChild
+        else -> "-"
+    }
+
+    val countMeasure = when (childState) {
+        is UiState.Success -> (childState as UiState.Success).data.countMeasure
+        else -> "-"
+    }
+
 
 
     LaunchedEffect(logoutState) {
@@ -100,7 +150,7 @@ fun HomeScreen(
                 ).show()
             }
 
-            else -> {}
+            else -> Unit
 
         }
     }
@@ -116,6 +166,20 @@ fun HomeScreen(
             )
         }
     }
+
+    if (exportState is UiState.Loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+    }
+
+
 
     if (showDialog) {
         AlertDialog(
@@ -196,7 +260,10 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
 
         ) {
-            CardKader()
+            CardKader(
+                countChild = countChild.toString(),
+                countMeasure = countMeasure.toString()
+            )
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 modifier = Modifier.fillMaxWidth(),
@@ -204,7 +271,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(20.dp)
             ) {
-                items(menuItems) { item ->
+                items(menuItemsKader) { item ->
                     NavItemCard(
                         title = item.title,
                         color = item.color,
@@ -248,37 +315,28 @@ fun HomeScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.Center
                         ) {
                             FilterDropdown(
-                                selectedValue = MonthYearUtils.monthNames[selectedDate.monthValue - 1],
+                                selectedValue = selectedMonth,
                                 items = monthList,
-                                onItemSelected = { month ->
-                                    selectedDate = selectedDate.withMonth(
-                                        MonthYearUtils.monthNames.indexOf(month) + 1
-                                    )
+                                onItemSelected = {
+                                    selectedMonth = it
                                 },
                                 modifier = Modifier.weight(1F)
                             )
-                            FilterDropdown(
-                                selectedValue = selectedDate.year.toString(),
-                                items = yearList.map { it.toString() },
-                                onItemSelected = { year ->
-                                    selectedDate = MonthYearUtils.resolveYearMonth(
-                                        selected = selectedDate,
-                                        newYear = year.toInt()
-                                    )
-                                },
-                                modifier = Modifier.width(150.dp)
-                            )
+
                         }
                         ButtonCustom(
                             onClick = {
-                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                scope.launch {
+                                    sheetState.hide()
                                     if (!sheetState.isVisible) {
                                         showBottomSheet = false
+                                        userViewModel.exportUsersByMonth("Februari")
                                     }
                                 }
+                                Log.d("HomeScreen", "btn di klik")
                             },
                             label = "Export",
                             modifier = Modifier
@@ -295,7 +353,7 @@ fun HomeScreen(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.Q)
 @Preview(showBackground = true)
 @Composable
 fun PreviewHomeScreen() {

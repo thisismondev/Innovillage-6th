@@ -35,7 +35,7 @@ import id.co.mondo.ukhuwah.ui.components.GenderField
 import id.co.mondo.ukhuwah.ui.components.TextFieldCustom
 import id.co.mondo.ukhuwah.ui.components.TextFieldDateCustom
 import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
-import id.co.mondo.ukhuwah.ui.viewmodel.UserViewModel
+import id.co.mondo.ukhuwah.ui.viewmodel.ChildViewModel
 
 @Composable
 fun ProfileChildrenScreen(
@@ -44,8 +44,8 @@ fun ProfileChildrenScreen(
     contentPadding: PaddingValues
 ) {
 
-    val userViewModel: UserViewModel = viewModel()
-    val state by userViewModel.childId.collectAsState()
+    val childViewModel: ChildViewModel = viewModel()
+    val state by childViewModel.childId.collectAsState()
 
 
     var name by remember { mutableStateOf("") }
@@ -62,7 +62,7 @@ fun ProfileChildrenScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
-        userViewModel.getChildById(id)
+        childViewModel.getChildById(id)
     }
 
     LaunchedEffect(state) {
@@ -96,7 +96,7 @@ fun ProfileChildrenScreen(
                 Button(
                     onClick = {
                         val nikValue = nik.ifBlank { null }
-                        userViewModel.updateChild(
+                        childViewModel.updateChild(
                             Children(
                                 id = id,
                                 name = name,
@@ -188,7 +188,7 @@ fun ProfileChildrenScreen(
                 values = nik,
                 label = "NIK",
                 onValueChange = {
-nik = it
+                    nik = it
                 },
                 keyboardType = KeyboardType.Number,
                 enabled = enabled

@@ -30,6 +30,37 @@ object MonthYearUtils {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    fun yearListFromBirth(birth: String?): List<Int> {
+        if (birth.isNullOrBlank() || birth.length < 7) return emptyList()
+
+        val birthYear = birth.substring(0, 4).toInt()
+        val currentYear = currentYearMonth().year
+
+        return (birthYear..currentYear).toList()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun monthListFromBirth(
+        birth: String?,
+        selectedYear: Int
+    ): List<String> {
+        if (birth.isNullOrBlank() || birth.length < 7) {
+            return monthNames
+        }
+
+        val birthYear = birth.substring(0, 4).toInt()
+        val birthMonth = birth.substring(5, 7).toInt()
+
+        val startMonth =
+            if (selectedYear == birthYear) birthMonth else 1
+
+        return monthNames
+            .subList(startMonth - 1, monthNames.size)
+    }
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun resolveYearMonth(
         selected: YearMonth,
         newYear: Int

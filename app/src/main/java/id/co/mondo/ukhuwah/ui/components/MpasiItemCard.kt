@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,7 +25,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,13 +37,14 @@ import id.co.mondo.ukhuwah.ui.theme.Pink4
 
 @Composable
 fun MpasiItemCard(
-    navController: NavController
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    fontBody: TextStyle,
+    fontTitle: TextStyle
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .padding(horizontal = 20.dp)
+        modifier = modifier
+            .height(125.dp)
             .clickable(
                 onClick = {
                     navController.navigate("detail-mpasi")
@@ -72,9 +73,12 @@ fun MpasiItemCard(
             ) {
                 Text(
                     text = "Sop Bola Udang",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
+                    style = fontTitle
+//                        MaterialTheme.typography.titleMedium.copy(
+//                        fontSize = 12.sp,
+//                        lineHeight = 16.sp,
+//                        fontWeight = FontWeight.Bold
+//                    )
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -88,9 +92,10 @@ fun MpasiItemCard(
                     )
                     Text(
                         text = "12 Bulan ke atas",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 12.sp
-                        ),
+                        style = fontBody,
+//                            MaterialTheme.typography.bodyMedium.copy(
+//                            fontSize = 10.sp
+//                        ),
                         color = Color.Gray
                     )
                 }
@@ -110,9 +115,11 @@ fun MpasiItemCard(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = "100", style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 12.sp
-                            )
+                            text = "100",
+                            style = fontBody
+//                                MaterialTheme.typography.bodyMedium.copy(
+//                                fontSize = 12.sp
+//                            )
                         )
                     }
                     Row(
@@ -126,9 +133,11 @@ fun MpasiItemCard(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = "100", style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 12.sp
-                            )
+                            text = "100",
+                            style = fontBody
+//                                MaterialTheme.typography.bodyMedium.copy(
+//                                fontSize = 12.sp
+//                            )
                         )
                     }
                     Icon(
@@ -144,7 +153,9 @@ fun MpasiItemCard(
                 painter = painterResource(R.drawable.bubur),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.shadow(8.dp,RoundedCornerShape(percent = 25))
+                modifier = Modifier
+                    .width(100.dp)
+                    .shadow(8.dp, RoundedCornerShape(percent = 25))
             )
 
 
@@ -160,7 +171,13 @@ fun PreviewPmasiItemCard() {
     Innovillage6thTheme {
         Column(Modifier.fillMaxSize()) {
             MpasiItemCard(
-                navController = rememberNavController()
+                navController = rememberNavController(),
+                modifier = Modifier
+                    .size(width = 250.dp, height = 200.dp),
+                fontBody = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 12.sp
+                ),
+                fontTitle = MaterialTheme.typography.titleMedium
             )
         }
     }

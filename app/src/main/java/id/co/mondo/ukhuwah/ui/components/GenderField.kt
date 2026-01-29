@@ -27,7 +27,7 @@ fun GenderField(
         Text(
             text = "Jenis Kelamin",
             style = MaterialTheme.typography.titleMedium,
-            color = Color.Gray
+            color = Color.Black
         )
         Spacer(modifier = Modifier.height(12.dp))
         Row(
@@ -44,7 +44,7 @@ fun GenderField(
                 )
                 Text(
                     text = "Laki-Laki", style = MaterialTheme.typography.titleMedium,
-                    color = Color.Gray
+                    color = Color.DarkGray
                 )
             }
             Row(
@@ -57,7 +57,7 @@ fun GenderField(
                 )
                 Text(
                     text = "Perempuan", style = MaterialTheme.typography.titleMedium,
-                    color = Color.Gray
+                    color = Color.DarkGray
                 )
             }
         }

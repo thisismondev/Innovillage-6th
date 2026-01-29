@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.ui.components.AppTopBar
@@ -91,13 +92,26 @@ fun HealthScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),
-            contentPadding = PaddingValues(vertical = 12.dp),
+            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(10) {
-                when(selectedTabIndex){
-                    0 -> ArticleItemCard()
-                    1 -> MpasiItemCard(navController)
+                when (selectedTabIndex) {
+                    0 -> {
+                        ArticleItemCard()
+                    }
+
+                    1 -> MpasiItemCard(
+                        navController = navController,
+                        modifier = Modifier.fillMaxWidth(),
+                        fontTitle = MaterialTheme.typography.titleMedium.copy(
+                            lineHeight = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        fontBody = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 12.sp
+                        )
+                    )
                 }
             }
         }

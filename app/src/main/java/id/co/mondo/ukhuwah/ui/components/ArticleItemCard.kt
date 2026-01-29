@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,12 +33,9 @@ import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 import id.co.mondo.ukhuwah.ui.theme.Pink4
 
 @Composable
-fun ArticleItemCard() {
+fun ArticleItemCard(modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(horizontal = 20.dp)
+        modifier = modifier
             .clickable(
                 onClick = {
                 }
@@ -50,24 +48,26 @@ fun ArticleItemCard() {
             defaultElevation = 6.dp
         )
     ) {
-        Column() {
+        Column(Modifier.fillMaxSize(),verticalArrangement = Arrangement.SpaceBetween) {
             Image(
                 painter = painterResource(R.drawable.bubur),
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(125.dp),
-                contentScale = ContentScale.Crop
+                    .height(125.dp)
             )
             Column(
-                modifier = Modifier.padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp).padding(bottom = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(space = 8.dp, alignment = Alignment.Bottom)
             ) {
                 Text(
                     text = "Kebijakan stunting yang tidak membahas anak yang ‘Sedang’ Stungting",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontSize = 10.sp
                     ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -123,7 +123,10 @@ fun ArticleItemCard() {
 fun PreviewArticleItemCard() {
     Innovillage6thTheme {
         Column(Modifier.fillMaxSize()) {
-            ArticleItemCard()
+            ArticleItemCard(
+                modifier = Modifier
+                    .size(width = 250.dp, height = 200.dp )
+            )
         }
     }
 }

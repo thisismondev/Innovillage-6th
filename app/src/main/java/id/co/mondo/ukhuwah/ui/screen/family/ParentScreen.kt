@@ -141,15 +141,22 @@ fun ParentScreen(
                 ) {
                     val users = (userState as UiState.Success<List<User>>).data
                     val sorted = users.sortedByDescending { it.created_at }
-
-
+                    val filteredUsers = if (query.isBlank()) {
+                        sorted
+                    } else {
+                        sorted.filter {
+                            it.name
+                                ?.contains(query, ignoreCase = true)
+                                ?: false
+                        }
+                    }
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth(),
                         contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(sorted) {
+                        items(filteredUsers) {
                             ParentCard(
                                 user = User(
                                     name = it.name,
