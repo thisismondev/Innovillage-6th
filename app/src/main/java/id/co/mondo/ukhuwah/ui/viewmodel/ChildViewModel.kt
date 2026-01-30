@@ -195,7 +195,11 @@ class ChildViewModel(
                         )
                     } ?: emptyList()
                 }.sortedByDescending { it.measured_at }
-                _allChilWithMeasuredState.value = UiState.Success(allMeasure)
+                if (allMeasure.isEmpty()) {
+                    _allChilWithMeasuredState.value = UiState.Empty
+                } else {
+                    _allChilWithMeasuredState.value = UiState.Success(allMeasure)
+                }
                 Log.d("UserViewModel", "Get All Children with measure Sukses: $allMeasure")
             }.onFailure {
                 _allChilWithMeasuredState.value = UiState.Error("Gagal mendapatkan data")

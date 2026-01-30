@@ -41,5 +41,5 @@ data class InsertUser(
 data class RoleUser(
     val id_users: String? = null,
     val name: String? = null,
-    val role: String? = null
+    val role: String,
 )

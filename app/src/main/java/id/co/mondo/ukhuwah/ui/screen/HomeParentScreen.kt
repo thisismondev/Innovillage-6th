@@ -187,7 +187,7 @@ fun HomeParentScreen(
                             color = item.color,
                             icon = item.icon,
                             onClick = {
-
+                                navController.navigate(item.routes)
                             }
                         )
                     }

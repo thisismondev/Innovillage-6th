@@ -17,7 +17,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,8 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import id.co.mondo.ukhuwah.ui.common.UiState
 import id.co.mondo.ukhuwah.ui.components.ButtonCustom
 import id.co.mondo.ukhuwah.ui.components.TextFieldCustom
@@ -41,7 +38,7 @@ import id.co.mondo.ukhuwah.ui.theme.Innovillage6thTheme
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
+fun LoginScreen( viewModel: AuthViewModel) {
 
     val context = LocalContext.current
 
@@ -49,26 +46,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
     var password: String by remember { mutableStateOf("") }
 
     val loginState by viewModel.loginState.collectAsState()
-
-    LaunchedEffect(loginState) {
-        when (loginState) {
-            is UiState.Success -> {
-                navController.navigate("home") {
-                    popUpTo("login") { inclusive = true }
-                }
-            }
-
-            is UiState.Error -> {
-                Toast.makeText(
-                    context,
-                    (loginState as UiState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            else -> {}
-        }
-    }
 
     when (loginState) {
         is UiState.Loading -> {
@@ -82,8 +59,14 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                 )
             }
         }
-
-        else -> {}
+        is UiState.Error -> {
+                Toast.makeText(
+                    context,
+                    (loginState as UiState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        else -> Unit
     }
 
     Column(
@@ -152,6 +135,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
 @Composable
 fun PreviewLoginScreen() {
     Innovillage6thTheme {
-        LoginScreen(navController = rememberNavController(), viewModel = viewModel())
+        LoginScreen( viewModel = viewModel())
     }
 }

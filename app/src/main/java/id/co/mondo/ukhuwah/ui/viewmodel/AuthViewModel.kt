@@ -40,10 +40,10 @@ class AuthViewModel(
             val loggedIn = authService.restoreSession()
             if (loggedIn) {
                 loadUserRole()
+            } else {
+                _isLoggedIn.value = false
+                _isCheckingSession.value = false
             }
-
-            _isLoggedIn.value = loggedIn
-            _isCheckingSession.value = false
         }
     }
 
@@ -52,11 +52,14 @@ class AuthViewModel(
         result.onSuccess { user ->
             Log.d("AuthViewModel", "Role user = $user")
             _userRole.value = user.role
+            _isLoggedIn.value = true
         }.onFailure {
             Log.e("AuthViewModel", "Gagal ambil role", it)
             _isLoggedIn.value = false
             _userRole.value = null
+            authService.logout()
         }
+        _isCheckingSession.value = false
     }
 
 
@@ -95,8 +98,8 @@ class AuthViewModel(
     fun logout() {
         viewModelScope.launch {
             authService.logout()
-            _isLoggedIn.value = false
             _userRole.value = null
+            _isLoggedIn.value = false
             Log.d("Logout", "Logout berhasil : ${_isLoggedIn.value}")
         }
     }

@@ -32,7 +32,7 @@ import id.co.mondo.ukhuwah.ui.screen.health.HealthScreen
 import id.co.mondo.ukhuwah.ui.viewmodel.AuthViewModel
 
 @Composable
-fun UkhuwahApp( authViewModel: AuthViewModel) {
+fun UkhuwahApp(authViewModel: AuthViewModel) {
 
 
     val navController = rememberNavController()
@@ -47,11 +47,21 @@ fun UkhuwahApp( authViewModel: AuthViewModel) {
 
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
     val userRole by authViewModel.userRole.collectAsState()
+    Log.d("NAV_DEBUG", "Is logged in: $isLoggedIn , is role: $userRole")
 
-    LaunchedEffect(isLoggedIn, userRole) {
+
+    val isCheckingSession by authViewModel.isCheckingSession.collectAsState()
+
+    LaunchedEffect(isLoggedIn, userRole, isCheckingSession, currentRoute) {
+        if (isCheckingSession) {
+            return@LaunchedEffect
+        }
+
         if (!isLoggedIn) {
-            navController.navigate("login") {
-                popUpTo(0) { inclusive = true }
+            if (currentRoute != "login" && currentRoute != "register") {
+                navController.navigate("login") {
+                    popUpTo(0) { inclusive = true }
+                }
             }
             return@LaunchedEffect
         }
@@ -67,9 +77,11 @@ fun UkhuwahApp( authViewModel: AuthViewModel) {
             "home"
         }
 
-        navController.navigate(target) {
-            popUpTo(0) { inclusive = true }
-            launchSingleTop = true
+        if (currentRoute == "login" || currentRoute == "register" || currentRoute == null) {
+            navController.navigate(target) {
+                popUpTo(0) { inclusive = true }
+                launchSingleTop = true
+            }
         }
     }
 
@@ -84,7 +96,7 @@ fun UkhuwahApp( authViewModel: AuthViewModel) {
 
     Scaffold(
         bottomBar = {
-            if (currentRoute in routes){
+            if (currentRoute in routes) {
                 when (userRole) {
                     "Admin" -> BottomBar(navController)
                     "Parent" -> BottomBarParent(navController)
@@ -94,12 +106,12 @@ fun UkhuwahApp( authViewModel: AuthViewModel) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination ="login",
+            startDestination = "login",
 
             ) {
 //            Auth
             composable("login") {
-                LoginScreen(navController, authViewModel)
+                LoginScreen( authViewModel)
             }
             composable("register") {
                 RegisterScreen(
